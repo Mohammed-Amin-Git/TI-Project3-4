@@ -1,2 +1,2 @@
-# TI-Project3-4
-Technical Computer Science Project3-4
+# GUI-Project3-4
+This is the github repo for the Graphical User Interface of the ATM.

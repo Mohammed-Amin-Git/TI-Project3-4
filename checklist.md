@@ -1,0 +1,3 @@
+- Add passcode page
+- Integrate keypad with GUI
+- Integrate RFID card with GUI

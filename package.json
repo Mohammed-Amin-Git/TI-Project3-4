@@ -1,0 +1,16 @@
+{
+  "name": "bankserver",
+  "version": "1.0.0",
+  "description": "Dit is de GUI voor project 3/4 van de opleiding Technische Informatica op de Hogeschool Rotterdam",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mohammed Amin El Moussati",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.3",
+    "serialport": "^12.0.0",
+    "ws": "^8.16.0"
+  }
+}

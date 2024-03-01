@@ -1,0 +1,48 @@
+body {
+    font-family: Arial;
+    margin: 0;
+    overflow: hidden;
+    background-color: #e3e5ff;
+}
+header {
+    background-color: #1b1e3d;
+    color: #fff;
+    height: 120px;
+    border-bottom: solid 10px #1b1e3d;
+}
+#acm-container {
+    background-color: #e3e5ff;
+    ;
+    color: #1b1e3d;
+    display: inline-block;
+    padding: 50px;
+    margin: 0;
+    height: 23px;
+    width: 10%;
+    text-align: center;
+}
+#acm-container span {
+    position: relative;
+    top: var(--header-top);
+    font-size: 21px;
+    font-weight: bold;
+}
+#title-container {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+#title-container span{
+    position: relative;
+    top: -79px;
+    font-size: 30px;
+    font-weight: bold;
+}
+#rfid {
+    position: absolute;
+    top: 60%;
+    left: 52.5%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    height: auto;
+}
