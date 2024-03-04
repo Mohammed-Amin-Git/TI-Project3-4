@@ -23,7 +23,7 @@ header {
 }
 #acm-container span {
     position: relative;
-    top: var(--header-top);
+    top: -9px;
     font-size: 21px;
     font-weight: bold;
 }
@@ -37,6 +37,9 @@ header {
     top: -79px;
     font-size: 30px;
     font-weight: bold;
+    font-family: Arial;
+    font-weight: 100;
+    font-style: normal;
 }
 #rfid {
     position: absolute;

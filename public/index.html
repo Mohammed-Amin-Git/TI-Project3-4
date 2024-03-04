@@ -3,21 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="connect/style.css">
+    <link rel="stylesheet" href="scan_card/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Wild West Bank</title>
 </head>
 <body>
-    <header>
-        <div id="acm-container">
-            <span>ATM</span>
-        </div>
-        <div id="title-container">
-            <span>Wild West Bank</span>
-        </div>
-    </header>
-    <div class="container">
-        <img src="images/rfid.png" id="rfid">
+    <div class="page active" id="connect-page">
+        <h1 id="connect-title">Click the button to connect to the Serial Microcontroller</h1>
+        <button id="serial-connector">Connect</button>
     </div>
+
+    <div class="page" id="scan-card-page">
+        <header>
+            <div id="acm-container">
+                <span>Wild West Bank</span>
+            </div>
+            <div id="title-container">
+                <span>Scan uw pas</span>
+            </div>
+        </header>
+        <div class="container">
+            <img src="images/rfid.png" id="rfid">
+        </div>
+    </div>
+    
     <script src="app.js"></script>
 </body>
 </html>
