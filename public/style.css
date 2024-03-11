@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patua+One&display=swap');
+
+body {
+    overflow: hidden;
+    margin: 0;
+    font-family: Arial;
+    font-family: "Patua One", serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #e3e5ff;
+}
+header {
+    background-color: #e3e5ff;
+    color: #fff;
+    height: 120px;
+    border-bottom: solid 3px #1b1e3d;
+}
+#acm-container {
+    background-color: #1b1e3d;
+    color: #e3e5ff;
+    display: inline-block;
+    padding: 50px;
+    margin: 0;
+    height: 21px;
+    width: 10%;
+    text-align: center;
+}
+#acm-container span {
+    position: relative;
+    top: -9px;
+    font-size: 21px;
+    font-weight: 300;
+}
+#title-container {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+#title-container span{
+    position: relative;
+    top: -79px;
+    font-size: 30px;
+    font-style: normal;
+    color: #1b1e3d;
+}
+#card-symbol {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 150px;
+    color: #1b1e3d;
+    padding-left: 30px;
+    padding-right: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-radius: 20px;
+    background-color: #e3e5ff;
+}
+#card-symbol span {
+    font-size: 60px;
+    padding: 30px;
+    position: relative;
+    top: -30px;
+}
+#rfid {
+    position: absolute;
+    top: 85%;
+    left: 90%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: auto;
+}
+#pincode {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+#pincode h1 {
+    font-size: 40px;
+}
+#pincode-placeholder {
+    font-size: 100px;
+    letter-spacing: 30px;
+    border: solid 5px black;
+    padding: 30px;
+    background-color: #fff;
+    width: 70%;
+    text-align: center;
+    border-radius: 40px;
+}
+.page {
+    display: none;
+}
+.active {
+    display: block;
+}
+#start {
+    background-color: #1b1e3d;
+    color: #fff;
+    border-radius: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: solid 2px #1b1e3d;
+    font-size: 30px;
+    padding: 10px;
+    width: 30%;
+    cursor: pointer;
+}
+#start:hover {
+    background-color: #000;
+    border: solid 2px #000;
+}
+#connect-title {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 50%;
+    font-size: 40px;
+}

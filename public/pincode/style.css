@@ -1,0 +1,16 @@
+#pincode {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+#pincode-placeholder {
+    font-size: 100px;
+    letter-spacing: 30px;
+    border: solid 5px black;
+    padding: 30px;
+    background-color: #fff;
+    width: 70%;
+    text-align: center;
+}

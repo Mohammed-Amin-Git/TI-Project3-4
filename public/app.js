@@ -1,39 +1,47 @@
-window.onload = () => {
-    Swal.fire({
-        title: "ATM Setup",
-        text: "Welcome to the ATM Setup Enviroment!"
-    });
-};
+let CLIENT_STATE = "NULL";
 
-let port;
-document.querySelector("#serial-connector").addEventListener("click", async () => {
-    port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 9600 });
-    
-    await Swal.fire({
-        title: "Connected!",
-        text: "The client succesfully connected to the microcontroller!",
-        icon: "success",
-        confirmButtonText: "Continue"
+document.querySelector("#start").addEventListener("click", () => {
+    deactivate_page("#connect-page")
+    activate_page("#scan-card-page")
+
+    CLIENT_STATE = "SCAN_CARD";
+
+    const socket = new WebSocket("ws://localhost:8080");
+
+    socket.addEventListener("message", event => {
+        let data = JSON.parse(event.data);
+
+        // if(data.type == "REDIRECT" && data.data == "PINCODE") {
+        //     deactivate_page("#scan-card-page");
+        //     activate_page("#pincode-page");
+
+        //     CLIENT_STATE = "PINCODE";
+        // }
+
+        if(data.type == "REDIRECT") {
+            switch(data.data) {
+                case "PINCODE":
+                    deactivate_page("#scan-card-page");
+                    activate_page("#pincode-page");
+                    CLIENT_STATE = "PINCODE";
+                    break;
+                case "OPTIONS":
+                    CLIENT_STATE = "OPTIONS";
+                    console.log("OPTIONS");
+                    break;
+            }
+        }
+
+        if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {
+            let pincodePlaceholder = document.querySelector("#pincode-placeholder");
+            pincodePlaceholder.value = pincodePlaceholder.value + data.data.toString();
+        }
+
     })
 
-    deactivate_page("#connect-page");
-    activate_page("#scan-card-page");
-
-    const textDecoder = new TextDecoderStream();
-    const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
-    const reader = port.readable.getReader();
-    while(true) {
-        const { value, done, } = await reader.read();
-        if(done) {
-            reader.releaseLock();
-            break;
-        }
-        if(value) {
-            console.log(value);
-        }
-    }
-
+    socket.addEventListener("open", event => {
+        socket.send("Hey, Server!");
+    });
 });
 
 function activate_page(id) {

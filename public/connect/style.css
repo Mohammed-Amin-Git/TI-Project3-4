@@ -1,9 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patua+One&display=swap');
 
 body {
     overflow: hidden;
     margin: 0;
     font-family: Arial;
+    font-family: "Patua One", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 .page {
     display: none;
@@ -11,7 +15,7 @@ body {
 .active {
     display: block;
 }
-#serial-connector {
+#start {
     background-color: #1b1e3d;
     color: #fff;
     border-radius: 30px;
@@ -22,9 +26,10 @@ body {
     border: solid 2px #1b1e3d;
     font-size: 30px;
     padding: 10px;
+    width: 30%;
     cursor: pointer;
 }
-#serial-connector:hover {
+#start:hover {
     background-color: #000;
     border: solid 2px #000;
 }
@@ -35,8 +40,5 @@ body {
     transform: translate(-50%, -50%);
     text-align: center;
     width: 50%;
-    font-family: "Roboto", sans-serif;
-    font-weight: 400;
-    font-style: normal;
     font-size: 40px;
 }
