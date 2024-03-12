@@ -1,4 +1,0 @@
-.gitignore
-node_modules
-.env
-ssh_tunnel.sh
