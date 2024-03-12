@@ -1,3 +1,4 @@
 .gitignore
-checklist.md
 node_modules
+.env
+ssh_tunnel.sh
