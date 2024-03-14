@@ -45,10 +45,18 @@ document.querySelector("#start").addEventListener("click", () => {
                 case "SCAN_CARD_NOT_EXIST":
                     Swal.fire({
                         title: "Invalid card",
-                        text: "Your card doesn't exist",
+                        text: "Your card is not registered in the database!",
                         icon: "error"
                     });
                     break;
+                case "PINCODE_INCORRECT":
+                Swal.fire({
+                    title: "Incorrect pincode",
+                    text: "Your pincode is incorrect",
+                    icon: "error"
+                });
+                document.querySelector("#pincode-placeholder").value = "";    
+                break;
             }
         }
 

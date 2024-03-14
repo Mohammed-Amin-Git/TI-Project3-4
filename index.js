@@ -69,7 +69,10 @@ let CLIENT_STATE = "NULL";
 wss.on('connection', ws => {
     console.log("Client connection established!");
     CLIENT_STATE = "SCAN_CARD";
+
+    let global_uid;
     let pincode_count = 0;
+    let pincodeInput = "";
 
     parser.on('data', (data) => {
       try {
@@ -88,6 +91,7 @@ wss.on('connection', ws => {
                       "data": "#"
                     }));
                     pincode_count--;
+                    pincodeInput = pincodeInput.substring(0, pincodeInput.length-1);
                   } else if(pincodeCharacter != "*") {
                     // Sending pincode number to client
                     ws.send(JSON.stringify({
@@ -95,29 +99,41 @@ wss.on('connection', ws => {
                       "data": "*"
                     }));
                     pincode_count++;
+                    pincodeInput += pincodeCharacter;
                   }
                   if(pincode_count >= 4) {
                     CLIENT_STATE = "OPTIONS";
                     pincode_count = 0;
 
+                    db.query("SELECT Pincode FROM Customer WHERE Pass_number = ? AND Pincode = ?", [global_uid, parseInt(pincodeInput)])
+                    .then(([rows, fields]) => {
+                        if(rows.length == 0) {
+                          ws.send(JSON.stringify({
+                            "type": "ERROR",
+                            "data": "PINCODE_INCORRECT"
+                          }));
+                          CLIENT_STATE = "PINCODE";
+                        } else {
+                          ws.send(JSON.stringify({
+                            "type": "REDIRECT",
+                            "data": "OPTIONS"
+                          }));
+                          CLIENT_STATE = "OPTIONS"
+                        }
+                    });
+
+                    pincodeInput = "";
                     // TODO: Before sending the redirect it should check if the pincode is correct
                     // Max three tries
-
-                    ws.send(JSON.stringify({
-                      "type": "REDIRECT",
-                      "data": "OPTIONS"
-                    }));
                   } 
               }
               break;
           }
       } catch(err) { // Could not parse JSON data, so it is an UID
-        let uid = data.trim();
-        console.log(uid);
-
-        // TODO: Before sending the redirect, it should check if the UID is in the database
+        global_uid = data.trim();
+        console.log(global_uid);
         
-        db.query("SELECT Customer_ID FROM Customer WHERE Pass_number = ?", [uid]).then(([rows, fields]) => {
+        db.query("SELECT Customer_ID FROM Customer WHERE Pass_number = ?", [global_uid]).then(([rows, fields]) => {
           if(rows.length == 0) {
             ws.send(JSON.stringify({
               "type": "ERROR",
