@@ -9,11 +9,15 @@ import 'dotenv/config';
 const app = express();
 const wss = new WebSocketServer({ port: 8080 });
 
+// Express
 app.use(express.static('public'));
+app.use(express.json());
 
+// SerialPort Config
 const port = new SerialPort({ path: process.env.SERIAL_PORT, baudRate: 9600 });
 const parser = port.pipe(new ReadlineParser());
 
+// SSH Tunnel Config
 const tunnelOptions = {
   autoClose:true
 }
@@ -39,9 +43,10 @@ const forwardOptions = {
 let [server, conn] = await createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOptions);
 
 server.on('connection', (connection) => {
-  console.log("SSH Tunnel succesful");
+  console.log("SSH Tunnel succesfully connected!");
 });
 
+// MySQL Config
 const db = mysql.createPool({
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -66,14 +71,19 @@ const db = mysql.createPool({
 // States: NULL, SCAN_CARD, PINCODE, OPTIONS
 let CLIENT_STATE = "NULL";
 
+// WebSockets
 wss.on('connection', ws => {
     console.log("Client connection established!");
     CLIENT_STATE = "SCAN_CARD";
 
     let global_uid;
+    let user_id;
+
     let pincode_count = 0;
+    let pincode_error_count = 0;
     let pincodeInput = "";
 
+    // Incoming Serial data
     parser.on('data', (data) => {
       try {
         // Parsing incoming pincode data
@@ -90,8 +100,11 @@ wss.on('connection', ws => {
                       "type": "PINCODE",
                       "data": "#"
                     }));
-                    pincode_count--;
-                    pincodeInput = pincodeInput.substring(0, pincodeInput.length-1);
+
+                    if(pincode_count > 0) {
+                      pincode_count--;
+                      pincodeInput = pincodeInput.substring(0, pincodeInput.length-1);
+                    }
                   } else if(pincodeCharacter != "*") {
                     // Sending pincode number to client
                     ws.send(JSON.stringify({
@@ -105,52 +118,92 @@ wss.on('connection', ws => {
                     CLIENT_STATE = "OPTIONS";
                     pincode_count = 0;
 
-                    db.query("SELECT Pincode FROM Customer WHERE Pass_number = ? AND Pincode = ?", [global_uid, parseInt(pincodeInput)])
+                    db.query("SELECT Customer_ID, Pincode, Card_blocked FROM Customer WHERE Pass_number = ? AND Pincode = ?", [global_uid, parseInt(pincodeInput)])
                     .then(([rows, fields]) => {
                         if(rows.length == 0) {
+                          pincode_error_count++;
+                          CLIENT_STATE = "PINCODE";
+
                           ws.send(JSON.stringify({
                             "type": "ERROR",
-                            "data": "PINCODE_INCORRECT"
+                            "data": "PINCODE_INCORRECT",
+                            "count": 3-pincode_error_count
                           }));
-                          CLIENT_STATE = "PINCODE";
+
+                          if(pincode_error_count >= 3) {
+                            db.query("UPDATE Customer SET Card_blocked = TRUE WHERE Pass_number = ?", [global_uid]);
+
+                            ws.send(JSON.stringify({
+                              "type": "REDIRECT",
+                              "data": "SCAN_CARD"
+                            }));
+
+                            ws.send(JSON.stringify({
+                              "type": "ERROR",
+                              "data": "CARD_BLOCKED"
+                            }));
+
+                            CLIENT_STATE = "SCAN_CARD";
+                          }
                         } else {
-                          ws.send(JSON.stringify({
-                            "type": "REDIRECT",
-                            "data": "OPTIONS"
-                          }));
-                          CLIENT_STATE = "OPTIONS"
+                          if(rows[0].Card_blocked == 1) {
+                            ws.send(JSON.stringify({
+                              "type": "ERROR",
+                              "data": "CARD_BLOCKED"
+                            }));
+                          } else {
+                            // PINCODE was success
+                            ws.send(JSON.stringify({
+                              "type": "REDIRECT",
+                              "data": "OPTIONS"
+                            }));
+  
+                            user_id = rows[0].Customer_ID;
+                            
+                            CLIENT_STATE = "OPTIONS"
+                          }
+
+                          pincode_error_count = 0;
                         }
                     });
 
                     pincodeInput = "";
-                    // TODO: Before sending the redirect it should check if the pincode is correct
-                    // Max three tries
                   } 
               }
               break;
           }
       } catch(err) { // Could not parse JSON data, so it is an UID
-        global_uid = data.trim();
-        console.log(global_uid);
-        
-        db.query("SELECT Customer_ID FROM Customer WHERE Pass_number = ?", [global_uid]).then(([rows, fields]) => {
-          if(rows.length == 0) {
-            ws.send(JSON.stringify({
-              "type": "ERROR",
-              "data": "SCAN_CARD_NOT_EXIST"
-            }));
-            CLIENT_STATE = "SCAN_CARD";
-          } else {
-            ws.send(JSON.stringify({
-              "type": "REDIRECT",
-              "data": "PINCODE"
-            }));
-            CLIENT_STATE = "PINCODE";
-          }
-        }); 
-      }
+          if(CLIENT_STATE == "SCAN_CARD") {
+            global_uid = data.trim();
+            console.log(global_uid);
+
+            db.query("SELECT Customer_ID, Card_blocked FROM Customer WHERE Pass_number = ?", [global_uid]).then(([rows, fields]) => {
+              if(rows.length == 0) {
+                ws.send(JSON.stringify({
+                  "type": "ERROR",
+                  "data": "SCAN_CARD_NOT_EXIST"
+                }));
+                CLIENT_STATE = "SCAN_CARD";
+              } else {
+                if(rows[0].Card_blocked == true) {
+                  ws.send(JSON.stringify({
+                    "type": "ERROR",
+                    "data": "CARD_BLOCKED"
+                  }));
+                } else {
+                  ws.send(JSON.stringify({
+                    "type": "REDIRECT",
+                    "data": "PINCODE"
+                  }));
+                  CLIENT_STATE = "PINCODE";
+                }
+              }
+            });
+          } 
+        }
     });
 
+    // Incoming WebSockets Data
     ws.on('message', data => {
       switch(data.toString()) {
         case "UITLOGGEN":
@@ -158,10 +211,31 @@ wss.on('connection', ws => {
             "type": "REDIRECT",
             "data": "SCAN_CARD"
           }));
+
+          user_id = null;
           CLIENT_STATE = "SCAN_CARD";
           break;
+        case "USER_DATA":
+          db.query("SELECT Name FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
+            let name = rows[0].Name;
+
+            ws.send(JSON.stringify({
+              "type": "USER_DATA",
+              "data": name
+            }));
+          });
       }
     });
 });
+
+// APIs
+// app.get("/uitloggen", (req, res) => {
+//   ws.send(JSON.stringify({
+//     "type": "REDIRECT",
+//     "data": "SCAN_CARD"
+//   }));
+//   CLIENT_STATE = "SCAN_CARD";
+//   res.json({status: "success"});
+// });
 
 app.listen(80, () => console.log("Creating Server: http://localhost/"));

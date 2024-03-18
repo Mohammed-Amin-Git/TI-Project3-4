@@ -127,7 +127,7 @@ header {
 }
 .left {
     position: absolute;
-    top: 55%;
+    top: 62%;
     left: 25%;
     transform: translate(-50%, -50%);
 }
@@ -150,11 +150,15 @@ header {
 }
 .right {
     position: absolute;
-    top: 55%;
+    top: 62%;
     left: 75%;
     transform: translate(-50%, -50%);
 }
 .options-title {
     position: relative;
     left: 37px;
+}
+#welcome-message {
+    position: relative;
+    left: 3%;
 }
