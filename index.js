@@ -224,6 +224,18 @@ wss.on('connection', ws => {
               "data": name
             }));
           });
+          break;
+        case "GET_INFO":
+          ws.send(JSON.stringify({
+            "type": "REDIRECT",
+            "data": "GET_INFO"
+          }));
+
+          ws.send(JSON.stringify({
+            "type": "GET_INFO",
+            "data": "test"
+          }));
+          break;
       }
     });
 });

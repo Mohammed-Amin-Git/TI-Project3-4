@@ -17,7 +17,7 @@
     <div class="page" id="scan-card-page">
         <header>
             <div id="acm-container">
-                <span>ATM</span>
+                <span><i class="fa-solid fa-building-columns"></i></span>
             </div>
             <div id="title-container">
                 <span>Wild West Bank</span>
@@ -32,7 +32,7 @@
     <div class="page" id="pincode-page">
         <header>
             <div id="acm-container">
-                <span>ATM</span>
+                <span><i class="fa-solid fa-building-columns"></i></span>
             </div>
             <div id="title-container">
                 <span>Wild West Bank</span>
@@ -42,11 +42,12 @@
             <h1>Voor uw pincode alsjeblieft in</h1>
             <input type="password" id="pincode-placeholder" disabled>
         </div>
+        <!-- <button id="back"><i class="fa-solid fa-backward-step"></i></button> -->
     </div>
     <div class="page" id="options-page">
         <header>
             <div id="acm-container">
-                <span>ATM</span>
+                <span><i class="fa-solid fa-building-columns"></i></span>
             </div>
             <div id="title-container">
                 <span>Wild West Bank</span>
@@ -54,6 +55,7 @@
         </header>
         <div class="container">
             <h1 id="welcome-message">Welkom terug, </h1>
+            <!--
             <div class="left">
                 <h2 class="options-title">Opties</h2>
                 <div id="geld-opnemen">
@@ -74,6 +76,34 @@
                     <button class="euro-btn btn">75 euro</button>
                 </div>
             </div>
+        -->
+
+            <div class="options-container">
+                <center>
+                    <button class="btn">Snelpinnen</button>
+                    <button class="btn">Geld opnemen</button>
+                    <button class="btn" id="info-btn">Gegevens ophalen</button>
+                    <button class="btn">Transcatie geschiedenis</button>
+                    <button class="btn" id="uitloggen">Uitloggen</button>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="page" id="gegevens-ophalen">
+        <header>
+            <div id="acm-container">
+                <img src="images/Logo.png" id="logo">
+            </div>
+            <div id="title-container">
+                <span>Wild West Bank</span>
+            </div>
+        </header>
+        <div id="gegevens-container">
+            <h1 id="gebruiker-gegevens">Gebruiker gegevens</h1>
+            <h2 class="text-gegevens"><span class="kolom-naam">Naam</span></h1>
+            <h2 class="text-gegevens"><span class="kolom-naam">IBAN</span></h2>
+            <h2 class="text-gegevens"><span class="kolom-naam">Saldo</span>&nbsp;&nbsp;</h2>
+            <h2 class="text-gegevens"><span class="kolom-naam">Datum</span>&nbsp;&nbsp;</h2>
         </div>
     </div>
     <script src="app.js"></script>

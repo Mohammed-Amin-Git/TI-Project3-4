@@ -4,8 +4,16 @@ const pages = {
     CONNECT: "#connect-page",
     SCAN_CARD: "#scan-card-page",
     PINCODE: "#pincode-page",
-    OPTIONS: "#options-page"
+    OPTIONS: "#options-page",
+    GET_INFO: "#gegevens-ophalen"
 };
+
+// DEBUG
+deactivate_page(pages.CONNECT);
+deactivate_page(pages.SCAN_CARD);
+deactivate_page(pages.PINCODE);
+deactivate_page(pages.OPTIONS);
+activate_page(pages.GET_INFO);
 
 document.querySelector("#start").addEventListener("click", () => {
     deactivate_page(pages.CONNECT)
@@ -48,6 +56,10 @@ document.querySelector("#start").addEventListener("click", () => {
                         CLIENT_STATE = "OPTIONS";
                     }
                     break;
+                case "GET_INFO":
+                    deactivate_page(pages.OPTIONS);
+                    activate_page(pages.GET_INFO);
+                    break;
             }
         } else if(data.type == "ERROR") {
             switch(data.data) {
@@ -76,6 +88,8 @@ document.querySelector("#start").addEventListener("click", () => {
         } else if(data.type == "USER_DATA") {
             console.log(data.data);
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
+        } else if(data.type == "GET_INFO") {
+            console.log(data);
         }
 
         if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {
@@ -94,6 +108,10 @@ document.querySelector("#start").addEventListener("click", () => {
 
     document.querySelector("#uitloggen").addEventListener('click', () => {
         socket.send("UITLOGGEN");
+    });
+
+    document.querySelector("#info-btn").addEventListener('click', () => {
+        socket.send("GET_INFO");
     });
 
     // socket.addEventListener("open", event => {
