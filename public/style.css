@@ -40,7 +40,7 @@ header {
 }
 #title-container span{
     position: relative;
-    top: -79px;
+    top: -164px;
     font-size: 30px;
     font-style: normal;
     color: #1b1e3d;
@@ -184,7 +184,7 @@ header {
 }
 #gegevens-container {
     position: absolute;
-    top: 50%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
     border: solid 2px black;
@@ -207,5 +207,6 @@ header {
     width: 150px;
     height: 150px;
     position: relative;
-    top: -10px;
+    top: -53px;
+    left: -10px;
 }

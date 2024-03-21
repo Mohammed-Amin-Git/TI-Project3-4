@@ -8,12 +8,12 @@ const pages = {
     GET_INFO: "#gegevens-ophalen"
 };
 
-// DEBUG
-deactivate_page(pages.CONNECT);
-deactivate_page(pages.SCAN_CARD);
-deactivate_page(pages.PINCODE);
-deactivate_page(pages.OPTIONS);
-activate_page(pages.GET_INFO);
+// DEBUG MODE
+// deactivate_page(pages.CONNECT);
+// deactivate_page(pages.SCAN_CARD);
+// deactivate_page(pages.PINCODE);
+// deactivate_page(pages.OPTIONS);
+// activate_page(pages.GET_INFO);
 
 document.querySelector("#start").addEventListener("click", () => {
     deactivate_page(pages.CONNECT)
@@ -86,10 +86,12 @@ document.querySelector("#start").addEventListener("click", () => {
                     });
             }
         } else if(data.type == "USER_DATA") {
-            console.log(data.data);
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
         } else if(data.type == "GET_INFO") {
-            console.log(data);
+            document.querySelector("#gegevens-naam").innerHTML = data.name;
+            document.querySelector("#gegevens-iban").innerHTML = data.iban;
+            document.querySelector("#gegevens-saldo").innerHTML = data.balance;
+            document.querySelector("#gegevens-datum").innerHTML = data.creation_date;
         }
 
         if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {

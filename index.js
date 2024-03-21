@@ -231,10 +231,15 @@ wss.on('connection', ws => {
             "data": "GET_INFO"
           }));
 
-          ws.send(JSON.stringify({
-            "type": "GET_INFO",
-            "data": "test"
-          }));
+          db.query("SELECT Name, Balance, IBAN, Creation_date FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
+            ws.send(JSON.stringify({
+              "type": "GET_INFO",
+              "name": rows[0].Name,
+              "balance": rows[0].Balance,
+              "iban": rows[0].IBAN,
+              "creation_date": rows[0].Creation_date
+            }));
+          });
           break;
       }
     });
