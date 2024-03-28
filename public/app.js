@@ -5,7 +5,8 @@ const pages = {
     SCAN_CARD: "#scan-card-page",
     PINCODE: "#pincode-page",
     OPTIONS: "#options-page",
-    GET_INFO: "#gegevens-ophalen"
+    GET_INFO: "#gegevens-ophalen",
+    GELD_OPNEMEN: "#geld-opnemen-page"
 };
 
 // DEBUG MODE
@@ -47,18 +48,18 @@ document.querySelector("#start").addEventListener("click", () => {
                     CLIENT_STATE = "PINCODE";
                     break;
                 case "OPTIONS":
-                    if(CLIENT_STATE == "PINCODE") {
-                        document.querySelector("#pincode-placeholder").value = "";
-                        deactivate_page(pages.PINCODE);
-                        activate_page(pages.OPTIONS);
+                    document.querySelector("#pincode-placeholder").value = "";
+                    deactivate_page(pages.PINCODE);
+                    deactivate_page(pages.GET_INFO);
+                    activate_page(pages.OPTIONS);
 
-                        socket.send("USER_DATA");
-                        CLIENT_STATE = "OPTIONS";
-                    }
+                    socket.send("USER_DATA");
+                    CLIENT_STATE = "OPTIONS";
                     break;
                 case "GET_INFO":
                     deactivate_page(pages.OPTIONS);
                     activate_page(pages.GET_INFO);
+                    CLIENT_STATE = "GET_INFO";
                     break;
             }
         } else if(data.type == "ERROR") {
@@ -88,10 +89,10 @@ document.querySelector("#start").addEventListener("click", () => {
         } else if(data.type == "USER_DATA") {
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
         } else if(data.type == "GET_INFO") {
-            document.querySelector("#gegevens-naam").innerHTML = data.name;
-            document.querySelector("#gegevens-iban").innerHTML = data.iban;
-            document.querySelector("#gegevens-saldo").innerHTML = data.balance;
-            document.querySelector("#gegevens-datum").innerHTML = data.creation_date;
+            document.querySelector("#gegevens-naam").innerHTML = "Naam: " + data.name;
+            document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + data.iban;
+            document.querySelector("#gegevens-saldo").innerHTML = "Saldo: €" + data.balance;
+            document.querySelector("#gegevens-datum").innerHTML = "Gemaakt op: " + data.creation_date;
         }
 
         if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {
@@ -116,6 +117,13 @@ document.querySelector("#start").addEventListener("click", () => {
         socket.send("GET_INFO");
     });
 
+    document.querySelector("#back-button").addEventListener('click', () => {
+        socket.send("BACK");
+    });
+
+    document.querySelector("#geld-opnemen").addEvenetListener('click', () => {
+        socket.send("GELD_OPNEMEN");
+    });
     // socket.addEventListener("open", event => {
     //     socket.send("Hey, Server!");
     // });

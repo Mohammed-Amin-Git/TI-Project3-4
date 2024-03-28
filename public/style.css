@@ -210,3 +210,16 @@ header {
     top: -53px;
     left: -10px;
 }
+#back-button {
+    width: 10%;
+    height: 15vh;
+    background-color: #1b1e3d;
+    color: #fff;
+    font-size: 80px;
+    position: absolute;
+    bottom: 1%;
+    left: 1%;
+    border: solid 1px #1b1e3d;
+    border-radius: 10px;
+    cursor: pointer;
+}

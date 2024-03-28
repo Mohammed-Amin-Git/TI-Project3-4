@@ -230,6 +230,7 @@ wss.on('connection', ws => {
             "type": "REDIRECT",
             "data": "GET_INFO"
           }));
+          CLIENT_STATE = "GET_INFO";
 
           db.query("SELECT Name, Balance, IBAN, Creation_date FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
             ws.send(JSON.stringify({
@@ -241,6 +242,23 @@ wss.on('connection', ws => {
             }));
           });
           break;
+        case "BACK":
+          switch(CLIENT_STATE) {
+            case "GET_INFO":
+              ws.send(JSON.stringify({
+                  "type": "REDIRECT",
+                  "data": "OPTIONS"
+              }));
+              CLIENT_STATE = "OPTIONS";
+              break;
+          }
+        case "GELD_OPNEMEN":
+          ws.send(JSON.stringify({
+              "type": "REDIRECT",
+              "data": "GELD_OPNEMEN"
+          }));
+
+          CLIENT_STATE = "GELD_OPNEMEN";
       }
     });
 });
