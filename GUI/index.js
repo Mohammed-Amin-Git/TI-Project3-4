@@ -252,6 +252,7 @@ wss.on('connection', ws => {
               CLIENT_STATE = "OPTIONS";
               break;
           }
+          break;
         case "GELD_OPNEMEN":
           ws.send(JSON.stringify({
               "type": "REDIRECT",
@@ -259,6 +260,7 @@ wss.on('connection', ws => {
           }));
 
           CLIENT_STATE = "GELD_OPNEMEN";
+          break;
       }
     });
 });

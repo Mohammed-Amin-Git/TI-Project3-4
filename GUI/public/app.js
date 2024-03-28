@@ -61,6 +61,11 @@ document.querySelector("#start").addEventListener("click", () => {
                     activate_page(pages.GET_INFO);
                     CLIENT_STATE = "GET_INFO";
                     break;
+                case "GELD_OPNEMEN":
+                    deactivate_page(pages.OPTIONS);
+                    activate_page(pages.GELD_OPNEMEN);
+                    CLIENT_STATE = "GELD_OPNEMEN";
+                    break;
             }
         } else if(data.type == "ERROR") {
             switch(data.data) {
@@ -92,7 +97,7 @@ document.querySelector("#start").addEventListener("click", () => {
             document.querySelector("#gegevens-naam").innerHTML = "Naam: " + data.name;
             document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + data.iban;
             document.querySelector("#gegevens-saldo").innerHTML = "Saldo: €" + data.balance;
-            document.querySelector("#gegevens-datum").innerHTML = "Gemaakt op: " + data.creation_date;
+            document.querySelector("#gegevens-datum").innerHTML = "Gemaakt op: " + data.creation_date.split("T")[0];
         }
 
         if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {
@@ -121,9 +126,9 @@ document.querySelector("#start").addEventListener("click", () => {
         socket.send("BACK");
     });
 
-    document.querySelector("#geld-opnemen").addEvenetListener('click', () => {
-        socket.send("GELD_OPNEMEN");
-    });
+    // document.querySelector("#geld-opnemen").addEventListener('click', () => {
+    //     socket.send("GELD_OPNEMEN");
+    // });
     // socket.addEventListener("open", event => {
     //     socket.send("Hey, Server!");
     // });
