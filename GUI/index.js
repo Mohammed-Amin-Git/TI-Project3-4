@@ -176,11 +176,6 @@ wss.on('connection', ws => {
                     pincode_input = "";
                   } 
               } else if(CLIENT_STATE == "GELD_OPNEMEN") {
-                // ws.send(JSON.stringify({
-                //   "type": "GELD_INVOEREN",
-                //   "data": pincodeCharacter
-                // }));
-
                 if(pincodeCharacter == "#") {
                   ws.send(JSON.stringify({
                     "type": "GELD_INVOEREN",
@@ -196,6 +191,11 @@ wss.on('connection', ws => {
                     ws.send(JSON.stringify({
                       "type": "ERROR",
                       "data": "INVALID_CASH_AMOUNT"
+                    }));
+                  } else if(parseInt(cash_input) % 5 != 0) {
+                    ws.send(JSON.stringify({
+                      "type": "ERROR",
+                      "data": "INVALID_MULTIPLE"
                     }));
                   } else {
                     // GELD_OPNEMEN was success
@@ -296,6 +296,8 @@ wss.on('connection', ws => {
               "data": "OPTIONS"
             }));
 
+            cash_input = "";
+            cash_count = 0;
             CLIENT_STATE = "OPTIONS";
           } else if(CLIENT_STATE == "CASH_COMBINATION") {
             ws.send(JSON.stringify({
@@ -303,6 +305,8 @@ wss.on('connection', ws => {
               "data": "GELD_OPNEMEN"
             }));
             
+            cash_input = "";
+            cash_count = 0;
             CLIENT_STATE = "GELD_OPNEMEN";
           }
           break;
@@ -315,11 +319,16 @@ wss.on('connection', ws => {
           CLIENT_STATE = "GELD_OPNEMEN";
           break;
         case "GET_COMBINATIONS":
-          let combinations = findCashCombinations(parseInt(cash_input), bills);
-        
+          let combinations = findCashCombinations(parseInt(cash_input), bills).combinations;
+          combinations.sort((a,b) => a.length - b.length); // Sorting the combinations by array length ascending
+          if(combinations.length > 3) {
+            combinations = combinations.slice(0, 3);
+          }
+
           ws.send(JSON.stringify({
             "type": "COMBINATIONS",
-            "data": combinations
+            "data": combinations,
+            "amount": cash_input
           }));
         
           break;

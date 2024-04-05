@@ -50,6 +50,8 @@ document.querySelector("#start").addEventListener("click", () => {
                     break;
                 case "OPTIONS":
                     document.querySelector("#pincode-placeholder").value = "";
+                    document.querySelector("#cash-placeholder").value = "€";
+
                     deactivate_page(pages.PINCODE);
                     deactivate_page(pages.GET_INFO);
                     deactivate_page(pages.GELD_OPNEMEN);
@@ -64,12 +66,18 @@ document.querySelector("#start").addEventListener("click", () => {
                     CLIENT_STATE = "GET_INFO";
                     break;
                 case "GELD_OPNEMEN":
+                    document.querySelector("#cash-placeholder").value = "€";
+                    console.log("Resetting cash placeholder")
+
                     deactivate_page(pages.OPTIONS);
                     deactivate_page(pages.CASH_COMBINATION);
                     activate_page(pages.GELD_OPNEMEN);
+
                     CLIENT_STATE = "GELD_OPNEMEN";
                     break;
                 case "CASH_COMBINATION":
+                    document.querySelector("#cash-placeholder").innerHTML = "€";
+
                     deactivate_page(pages.GELD_OPNEMEN);
                     activate_page(pages.CASH_COMBINATION);
 
@@ -108,6 +116,12 @@ document.querySelector("#start").addEventListener("click", () => {
                         icon: "error"
                     })
                     break;
+                case "INVALID_MULTIPLE":
+                    Swal.fire({
+                        title: "Invalid amount",
+                        text: "The specified amount must be a multiple of 5!",
+                        icon: "error"
+                    })
             }
         } else if(data.type == "USER_DATA" && CLIENT_STATE == "OPTIONS") {
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
@@ -139,7 +153,43 @@ document.querySelector("#start").addEventListener("click", () => {
             }
 
         } else if(data.type == "COMBINATIONS" && CLIENT_STATE == "CASH_COMBINATION") {
-            console.log(data.data);
+            let index = 0;
+            for(let btn of document.getElementsByClassName("btn2")) {
+                let combination_array = data.data[index];
+                let numberOf5 = 0;
+                let numberOf10 = 0;
+                let numberOf50 = 0;
+
+                for(let i=0; i<combination_array.length;i++) {
+                    switch(combination_array[i]) {
+                        case 5:
+                            numberOf5++;
+                            break;
+                        case 10:
+                            numberOf10++;
+                            break;
+                        case 50:
+                            numberOf50++;
+                            break;
+                    }
+                }
+
+                let output_arr = [];
+                if(numberOf5) {
+                    output_arr.push(`${numberOf5} x 5`);
+                }
+                if(numberOf10) {
+                    output_arr.push(`${numberOf10} x 10`);
+                }
+                if(numberOf50) {
+                    output_arr.push(`${numberOf50} x 50`);
+                }
+
+                btn.innerHTML = output_arr.join(" + ");
+                index++;
+            }
+
+            document.querySelector("#biljetkeuze").innerHTML = `Biljetkeuze €${data.amount}`;
         }
 
     })
