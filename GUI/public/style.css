@@ -210,7 +210,7 @@ header {
     top: -53px;
     left: -10px;
 }
-#back-button {
+.back-button {
     width: 10%;
     height: 15vh;
     background-color: #1b1e3d;
@@ -222,4 +222,24 @@ header {
     border: solid 1px #1b1e3d;
     border-radius: 10px;
     cursor: pointer;
+}
+#geld-invoeren {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+#geld-invoeren h1 {
+    font-size: 40px;
+}
+#cash-placeholder {
+    font-size: 100px;
+    letter-spacing: 30px;
+    border: solid 5px black;
+    padding: 30px;
+    background-color: #fff;
+    width: 70%;
+    text-align: left;
+    border-radius: 100px;
 }

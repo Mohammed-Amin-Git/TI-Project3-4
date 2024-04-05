@@ -51,6 +51,7 @@ document.querySelector("#start").addEventListener("click", () => {
                     document.querySelector("#pincode-placeholder").value = "";
                     deactivate_page(pages.PINCODE);
                     deactivate_page(pages.GET_INFO);
+                    deactivate_page(pages.GELD_OPNEMEN);
                     activate_page(pages.OPTIONS);
 
                     socket.send("USER_DATA");
@@ -91,16 +92,16 @@ document.querySelector("#start").addEventListener("click", () => {
                         icon: "error"
                     });
             }
-        } else if(data.type == "USER_DATA") {
+        } else if(data.type == "USER_DATA" && CLIENT_STATE == "OPTIONS") {
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
-        } else if(data.type == "GET_INFO") {
+        
+        } else if(data.type == "GET_INFO" && CLIENT_STATE == "GET_INFO") {
             document.querySelector("#gegevens-naam").innerHTML = "Naam: " + data.name;
             document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + data.iban;
             document.querySelector("#gegevens-saldo").innerHTML = "Saldo: €" + data.balance;
             document.querySelector("#gegevens-datum").innerHTML = "Gemaakt op: " + data.creation_date.split("T")[0];
-        }
-
-        if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {
+        
+        } else if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {
             let pincodePlaceholder = document.querySelector("#pincode-placeholder");
             if(data.data == "#") {
                 let currentValue = pincodePlaceholder.value;
@@ -108,6 +109,8 @@ document.querySelector("#start").addEventListener("click", () => {
             } else {
                 pincodePlaceholder.value = pincodePlaceholder.value + data.data.toString();
             }
+        } else if(data.type == "GELD_INVOEREN" && CLIENT_STATE == "GELD_OPNEMEN") {
+            console.log("Receiving cash data");
         }
 
     })
@@ -122,13 +125,16 @@ document.querySelector("#start").addEventListener("click", () => {
         socket.send("GET_INFO");
     });
 
-    document.querySelector("#back-button").addEventListener('click', () => {
-        socket.send("BACK");
+    for(let btn of document.getElementsByClassName("back-button")) {
+        btn.addEventListener('click', () => {
+            socket.send("BACK");
+        });
+    }
+
+    document.querySelector("#geld-opnemen-btn").addEventListener('click', () => {
+        socket.send("GELD_OPNEMEN");
     });
 
-    // document.querySelector("#geld-opnemen").addEventListener('click', () => {
-    //     socket.send("GELD_OPNEMEN");
-    // });
     // socket.addEventListener("open", event => {
     //     socket.send("Hey, Server!");
     // });

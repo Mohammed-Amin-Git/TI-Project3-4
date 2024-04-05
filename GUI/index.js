@@ -243,14 +243,13 @@ wss.on('connection', ws => {
           });
           break;
         case "BACK":
-          switch(CLIENT_STATE) {
-            case "GET_INFO":
-              ws.send(JSON.stringify({
-                  "type": "REDIRECT",
-                  "data": "OPTIONS"
-              }));
-              CLIENT_STATE = "OPTIONS";
-              break;
+          if(CLIENT_STATE == "GET_INFO" || CLIENT_STATE == "GELD_OPNEMEN") {
+            ws.send(JSON.stringify({
+              "type": "REDIRECT",
+              "data": "OPTIONS"
+            }));
+
+            CLIENT_STATE = "OPTIONS";
           }
           break;
         case "GELD_OPNEMEN":

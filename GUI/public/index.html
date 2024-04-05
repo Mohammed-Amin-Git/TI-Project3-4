@@ -81,7 +81,7 @@
             <div class="options-container">
                 <center>
                     <button class="btn">Snelpinnen</button>
-                    <button class="btn">Geld opnemen</button>
+                    <button class="btn" id="geld-opnemen-btn">Geld opnemen</button>
                     <button class="btn" id="info-btn">Gegevens ophalen</button>
                     <button class="btn">Transcatie geschiedenis</button>
                     <button class="btn" id="uitloggen">Uitloggen</button>
@@ -105,10 +105,22 @@
             <h2 class="text-gegevens" id="gegevens-saldo"><span class="kolom-naam">Saldo</span>&nbsp;&nbsp;</h2>
             <h2 class="text-gegevens" id="gegevens-datum"><span class="kolom-naam">Datum</span>&nbsp;&nbsp;</h2>
         </div>
-        <button id="back-button"><i class="fa-solid fa-backward-step"></i></button>
+        <button class="back-button"><i class="fa-solid fa-backward-step"></i></button>
     </div>
     <div class="page" id="geld-opnemen-page">
-        <h1>Geld opnemen</h1>
+        <header>
+            <div id="acm-container">
+                <img src="images/Logo2.png" id="logo">
+            </div>
+            <div id="title-container">
+                <span>Wild West Bank</span>
+            </div>
+        </header>
+        <div id="geld-invoeren">
+            <h1>Voor uw bedrag in: (&euro; 5-100)</h1>
+            <input type="text" id="cash-placeholder" value="€" disabled>
+        </div>
+        <button class="back-button"><i class="fa-solid fa-backward-step"></i></button>
     </div>
     <script src="app.js"></script>
 </body>
