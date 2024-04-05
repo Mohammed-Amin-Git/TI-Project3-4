@@ -5,6 +5,7 @@ import { WebSocketServer } from 'ws';
 import mysql from 'mysql2/promise';
 import express from 'express';
 import 'dotenv/config';
+import { findCashCombinations } from './cashCombination.js';
 
 const app = express();
 const wss = new WebSocketServer({ port: 8080 });
@@ -75,6 +76,8 @@ let CLIENT_STATE = "NULL";
 wss.on('connection', ws => {
     console.log("Client connection established!");
     CLIENT_STATE = "SCAN_CARD";
+
+    const bills = [5, 10, 50];
 
     let global_uid;
     let user_id;
@@ -195,6 +198,7 @@ wss.on('connection', ws => {
                       "data": "INVALID_CASH_AMOUNT"
                     }));
                   } else {
+                    // GELD_OPNEMEN was success
                     ws.send(JSON.stringify({
                       "type": "REDIRECT",
                       "data": "CASH_COMBINATION"
@@ -309,6 +313,15 @@ wss.on('connection', ws => {
           }));
 
           CLIENT_STATE = "GELD_OPNEMEN";
+          break;
+        case "GET_COMBINATIONS":
+          let combinations = findCashCombinations(parseInt(cash_input), bills);
+        
+          ws.send(JSON.stringify({
+            "type": "COMBINATIONS",
+            "data": combinations
+          }));
+        
           break;
       }
     });

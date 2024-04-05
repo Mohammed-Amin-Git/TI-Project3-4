@@ -72,6 +72,8 @@ document.querySelector("#start").addEventListener("click", () => {
                 case "CASH_COMBINATION":
                     deactivate_page(pages.GELD_OPNEMEN);
                     activate_page(pages.CASH_COMBINATION);
+
+                    socket.send("GET_COMBINATIONS");
                     CLIENT_STATE = "CASH_COMBINATION";
                     break;
             }
@@ -136,6 +138,8 @@ document.querySelector("#start").addEventListener("click", () => {
                 cashPlaceholder.value = cashPlaceholder.value + data.data.toString();
             }
 
+        } else if(data.type == "COMBINATIONS" && CLIENT_STATE == "CASH_COMBINATION") {
+            console.log(data.data);
         }
 
     })
