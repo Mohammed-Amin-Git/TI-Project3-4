@@ -278,4 +278,5 @@ header {
     font-optical-sizing: auto;
     font-weight: 655;
     font-style: normal;
+    cursor: not-allowed;
 }

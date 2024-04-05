@@ -198,12 +198,21 @@ wss.on('connection', ws => {
                       "data": "INVALID_MULTIPLE"
                     }));
                   } else {
-                    // GELD_OPNEMEN was success
-                    ws.send(JSON.stringify({
-                      "type": "REDIRECT",
-                      "data": "CASH_COMBINATION"
-                    }));
-                    CLIENT_STATE = "CASH_COMBINATION";
+                    db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
+                      if(rows[0].Balance < parseInt(cash_input)) {
+                        ws.send(JSON.stringify({
+                          "type": "ERROR",
+                          "data": "LOW_BALANCE"
+                        }))
+                      } else {
+                        // GELD_OPNEMEN was success
+                        ws.send(JSON.stringify({
+                          "type": "REDIRECT",
+                          "data": "CASH_COMBINATION"
+                        }));
+                        CLIENT_STATE = "CASH_COMBINATION";
+                      }
+                    });
                   }
                 } else {
                   if(cash_count < 3) {

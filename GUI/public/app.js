@@ -122,6 +122,13 @@ document.querySelector("#start").addEventListener("click", () => {
                         text: "The specified amount must be a multiple of 5!",
                         icon: "error"
                     })
+                    break;
+                case "LOW_BALANCE":
+                    Swal.fire({
+                        title: "Low balance",
+                        text: "Your balance is too low for this withdrawal",
+                        icon: "error"
+                    })
             }
         } else if(data.type == "USER_DATA" && CLIENT_STATE == "OPTIONS") {
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
@@ -187,6 +194,12 @@ document.querySelector("#start").addEventListener("click", () => {
 
                 btn.innerHTML = output_arr.join(" + ");
                 index++;
+                btn.disabled = false;
+                btn.style.cursor = "pointer";
+
+                if(index >= data.data.length) {
+                    break;
+                }
             }
 
             document.querySelector("#biljetkeuze").innerHTML = `Biljetkeuze €${data.amount}`;
