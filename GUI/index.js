@@ -90,10 +90,10 @@ wss.on('connection', ws => {
         let dataObj = JSON.parse(data);
 
         switch(dataObj.type) {
-          case "PINCODE":
+          case "KEYPAD":
+              let pincodeCharacter = String.fromCharCode(dataObj.data);
               if(CLIENT_STATE == "PINCODE") {
                   console.log(dataObj);
-                  let pincodeCharacter = String.fromCharCode(dataObj.data);
 
                   if(pincodeCharacter == "#") {
                     ws.send(JSON.stringify({
@@ -169,6 +169,11 @@ wss.on('connection', ws => {
 
                     pincodeInput = "";
                   } 
+              } else if(CLIENT_STATE == "GELD_OPNEMEN") {
+                ws.send(JSON.stringify({
+                  "type": "GELD_INVOEREN",
+                  "data": pincodeCharacter
+                }));
               }
               break;
           }

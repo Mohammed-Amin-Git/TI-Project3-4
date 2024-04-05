@@ -110,7 +110,7 @@ document.querySelector("#start").addEventListener("click", () => {
                 pincodePlaceholder.value = pincodePlaceholder.value + data.data.toString();
             }
         } else if(data.type == "GELD_INVOEREN" && CLIENT_STATE == "GELD_OPNEMEN") {
-            console.log("Receiving cash data");
+            console.log(data);
         }
 
     })

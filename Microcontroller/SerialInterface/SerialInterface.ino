@@ -48,7 +48,7 @@ void loop(){
   char customKey = customKeypad.getKey();
   
   if (customKey){
-    transferNumber("PINCODE", customKey);
+    transferNumber("KEYPAD", customKey);
   }
 
   // if ( ! rfid.PICC_IsNewCardPresent())
