@@ -81,7 +81,10 @@ wss.on('connection', ws => {
 
     let pincode_count = 0;
     let pincode_error_count = 0;
-    let pincodeInput = "";
+    let pincode_input = "";
+
+    let cash_input = "";
+    let cash_count = 0;
 
     // Incoming Serial data
     parser.on('data', (data) => {
@@ -103,7 +106,7 @@ wss.on('connection', ws => {
 
                     if(pincode_count > 0) {
                       pincode_count--;
-                      pincodeInput = pincodeInput.substring(0, pincodeInput.length-1);
+                      pincode_input = pincode_input.substring(0, pincode_input.length-1);
                     }
                   } else if(pincodeCharacter != "*") {
                     // Sending pincode number to client
@@ -112,13 +115,13 @@ wss.on('connection', ws => {
                       "data": "*"
                     }));
                     pincode_count++;
-                    pincodeInput += pincodeCharacter;
+                    pincode_input += pincodeCharacter;
                   }
                   if(pincode_count >= 4) {
                     CLIENT_STATE = "OPTIONS";
                     pincode_count = 0;
 
-                    db.query("SELECT Customer_ID, Pincode, Card_blocked FROM Customer WHERE Pass_number = ? AND Pincode = ?", [global_uid, parseInt(pincodeInput)])
+                    db.query("SELECT Customer_ID, Pincode, Card_blocked FROM Customer WHERE Pass_number = ? AND Pincode = ?", [global_uid, parseInt(pincode_input)])
                     .then(([rows, fields]) => {
                         if(rows.length == 0) {
                           pincode_error_count++;
@@ -167,13 +170,48 @@ wss.on('connection', ws => {
                         }
                     });
 
-                    pincodeInput = "";
+                    pincode_input = "";
                   } 
               } else if(CLIENT_STATE == "GELD_OPNEMEN") {
-                ws.send(JSON.stringify({
-                  "type": "GELD_INVOEREN",
-                  "data": pincodeCharacter
-                }));
+                // ws.send(JSON.stringify({
+                //   "type": "GELD_INVOEREN",
+                //   "data": pincodeCharacter
+                // }));
+
+                if(pincodeCharacter == "#") {
+                  ws.send(JSON.stringify({
+                    "type": "GELD_INVOEREN",
+                    "data": "#"
+                  }));
+
+                  if(cash_count > 0) {
+                    cash_count--;
+                    cash_input = cash_input.substring(0, cash_input.length-1);
+                  }
+                } else if(pincodeCharacter == "*") {
+                  if(parseInt(cash_input) > 100 || parseInt(cash_input) < 5 || cash_input == "") {
+                    ws.send(JSON.stringify({
+                      "type": "ERROR",
+                      "data": "INVALID_CASH_AMOUNT"
+                    }));
+                  } else {
+                    ws.send(JSON.stringify({
+                      "type": "REDIRECT",
+                      "data": "CASH_COMBINATION"
+                    }));
+                    CLIENT_STATE = "CASH_COMBINATION";
+                  }
+                } else {
+                  if(cash_count < 3) {
+                    ws.send(JSON.stringify({
+                      "type": "GELD_INVOEREN",
+                      "data": pincodeCharacter
+                    }));
+  
+                    cash_count++;
+                    cash_input += pincodeCharacter;
+                  } 
+                }
               }
               break;
           }
@@ -255,6 +293,13 @@ wss.on('connection', ws => {
             }));
 
             CLIENT_STATE = "OPTIONS";
+          } else if(CLIENT_STATE == "CASH_COMBINATION") {
+            ws.send(JSON.stringify({
+              "type": "REDIRECT",
+              "data": "GELD_OPNEMEN"
+            }));
+            
+            CLIENT_STATE = "GELD_OPNEMEN";
           }
           break;
         case "GELD_OPNEMEN":

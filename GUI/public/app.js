@@ -6,7 +6,8 @@ const pages = {
     PINCODE: "#pincode-page",
     OPTIONS: "#options-page",
     GET_INFO: "#gegevens-ophalen",
-    GELD_OPNEMEN: "#geld-opnemen-page"
+    GELD_OPNEMEN: "#geld-opnemen-page",
+    CASH_COMBINATION: "#geld-combinatie-page"
 };
 
 // DEBUG MODE
@@ -64,8 +65,14 @@ document.querySelector("#start").addEventListener("click", () => {
                     break;
                 case "GELD_OPNEMEN":
                     deactivate_page(pages.OPTIONS);
+                    deactivate_page(pages.CASH_COMBINATION);
                     activate_page(pages.GELD_OPNEMEN);
                     CLIENT_STATE = "GELD_OPNEMEN";
+                    break;
+                case "CASH_COMBINATION":
+                    deactivate_page(pages.GELD_OPNEMEN);
+                    activate_page(pages.CASH_COMBINATION);
+                    CLIENT_STATE = "CASH_COMBINATION";
                     break;
             }
         } else if(data.type == "ERROR") {
@@ -91,6 +98,14 @@ document.querySelector("#start").addEventListener("click", () => {
                         text: "Contact the helpdesk!",
                         icon: "error"
                     });
+                    break;
+                case "INVALID_CASH_AMOUNT":
+                    Swal.fire({
+                        title: "Invalid amount",
+                        text: "Please enter a cash amount between €5-100",
+                        icon: "error"
+                    })
+                    break;
             }
         } else if(data.type == "USER_DATA" && CLIENT_STATE == "OPTIONS") {
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
@@ -109,8 +124,18 @@ document.querySelector("#start").addEventListener("click", () => {
             } else {
                 pincodePlaceholder.value = pincodePlaceholder.value + data.data.toString();
             }
+
         } else if(data.type == "GELD_INVOEREN" && CLIENT_STATE == "GELD_OPNEMEN") {
-            console.log(data);
+            let cashPlaceholder = document.querySelector("#cash-placeholder");
+            if(data.data == "#") {
+                if(cashPlaceholder.value.length > 1) {
+                    let currentValue = cashPlaceholder.value;
+                    cashPlaceholder.value = currentValue.substring(0, currentValue.length - 1);
+                }
+            } else {
+                cashPlaceholder.value = cashPlaceholder.value + data.data.toString();
+            }
+
         }
 
     })
