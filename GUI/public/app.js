@@ -22,6 +22,7 @@ document.querySelector("#start").addEventListener("click", () => {
     activate_page(pages.SCAN_CARD)
 
     CLIENT_STATE = "SCAN_CARD";
+    let cash_combinations;
 
     const socket = new WebSocket("ws://localhost:8080");
 
@@ -57,7 +58,9 @@ document.querySelector("#start").addEventListener("click", () => {
                     deactivate_page(pages.GELD_OPNEMEN);
                     activate_page(pages.OPTIONS);
 
-                    socket.send("USER_DATA");
+                    socket.send(JSON.stringify({
+                        "type": "USER_DATA"
+                    }));
                     CLIENT_STATE = "OPTIONS";
                     break;
                 case "GET_INFO":
@@ -81,7 +84,9 @@ document.querySelector("#start").addEventListener("click", () => {
                     deactivate_page(pages.GELD_OPNEMEN);
                     activate_page(pages.CASH_COMBINATION);
 
-                    socket.send("GET_COMBINATIONS");
+                    socket.send(JSON.stringify({
+                        "type": "GET_COMBINATIONS"
+                    }));
                     CLIENT_STATE = "CASH_COMBINATION";
                     break;
             }
@@ -161,6 +166,8 @@ document.querySelector("#start").addEventListener("click", () => {
 
         } else if(data.type == "COMBINATIONS" && CLIENT_STATE == "CASH_COMBINATION") {
             let index = 0;
+            cash_combinations = data.data;
+
             for(let btn of document.getElementsByClassName("btn2")) {
                 let combination_array = data.data[index];
                 let numberOf5 = 0;
@@ -210,26 +217,50 @@ document.querySelector("#start").addEventListener("click", () => {
     // OPTIONS
 
     document.querySelector("#uitloggen").addEventListener('click', () => {
-        socket.send("UITLOGGEN");
+        console.log('click');
+        socket.send(JSON.stringify({
+            "type": "UITLOGGEN"
+        }));
     });
 
     document.querySelector("#info-btn").addEventListener('click', () => {
-        socket.send("GET_INFO");
+        socket.send(JSON.stringify({
+            "type": "GET_INFO"
+        }));
     });
 
     for(let btn of document.getElementsByClassName("back-button")) {
         btn.addEventListener('click', () => {
-            socket.send("BACK");
+            socket.send(JSON.stringify({
+                "type": "BACK"
+            }));
         });
     }
 
     document.querySelector("#geld-opnemen-btn").addEventListener('click', () => {
-        socket.send("GELD_OPNEMEN");
+        socket.send(JSON.stringify({
+            "type": "GELD_OPNEMEN"
+        }));
     });
 
-    // socket.addEventListener("open", event => {
-    //     socket.send("Hey, Server!");
-    // });
+    document.querySelector("#cash-option1").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SELECT_COMBINATION",
+            "number": 0
+        }));
+    });
+    document.querySelector("#cash-option2").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SELECT_COMBINATION",
+            "number": 1
+        }));
+    });
+    document.querySelector("#cash-option3").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SELECT_COMBINATION",
+            "number": 2
+        }));
+    });
 });
 
 function activate_page(id) {
@@ -239,16 +270,3 @@ function activate_page(id) {
 function deactivate_page(id) {
     document.querySelector(id).classList.remove("active");
 }
-
-// Example fetch function
-// async function getApi(path) {
-//     const response = await fetch(path, {
-//         method: "GET",
-//         headers: {
-//             "Content-Type": "application/json"
-//         }
-//     });
-//     const result = await response.json();
-
-//     return result;
-// }

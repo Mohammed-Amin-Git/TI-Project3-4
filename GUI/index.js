@@ -3,7 +3,7 @@ import { createTunnel } from 'tunnel-ssh';
 import { SerialPort } from 'serialport';
 import { WebSocketServer } from 'ws';
 import mysql from 'mysql2/promise';
-import express from 'express';
+import express, { json } from 'express';
 import 'dotenv/config';
 import { findCashCombinations } from './cashCombination.js';
 
@@ -89,18 +89,23 @@ wss.on('connection', ws => {
     let cash_input = "";
     let cash_count = 0;
 
+    let cash_combinations;
+
     // Incoming Serial data
     parser.on('data', (data) => {
       try {
         // Parsing incoming pincode data
         let dataObj = JSON.parse(data);
 
+        // Selecting which type of dat to handle
         switch(dataObj.type) {
           case "KEYPAD":
               let pincodeCharacter = String.fromCharCode(dataObj.data);
+              // Handle pincode data
               if(CLIENT_STATE == "PINCODE") {
                   console.log(dataObj);
 
+                  // '#' is used as a backspace
                   if(pincodeCharacter == "#") {
                     ws.send(JSON.stringify({
                       "type": "PINCODE",
@@ -120,12 +125,16 @@ wss.on('connection', ws => {
                     pincode_count++;
                     pincode_input += pincodeCharacter;
                   }
+
+                  // When pincode length is equal to 4, then check the pincode
                   if(pincode_count >= 4) {
                     CLIENT_STATE = "OPTIONS";
                     pincode_count = 0;
 
+                    // Looking for a match in the database
                     db.query("SELECT Customer_ID, Pincode, Card_blocked FROM Customer WHERE Pass_number = ? AND Pincode = ?", [global_uid, parseInt(pincode_input)])
                     .then(([rows, fields]) => {
+                        // No match found
                         if(rows.length == 0) {
                           pincode_error_count++;
                           CLIENT_STATE = "PINCODE";
@@ -152,7 +161,8 @@ wss.on('connection', ws => {
                             CLIENT_STATE = "SCAN_CARD";
                           }
                         } else {
-                          if(rows[0].Card_blocked == 1) {
+                          // Checking if the card is blocked
+                          if(rows[0].Card_blocked) {
                             ws.send(JSON.stringify({
                               "type": "ERROR",
                               "data": "CARD_BLOCKED"
@@ -175,7 +185,8 @@ wss.on('connection', ws => {
 
                     pincode_input = "";
                   } 
-              } else if(CLIENT_STATE == "GELD_OPNEMEN") {
+              } else if(CLIENT_STATE == "GELD_OPNEMEN") { // Keypad data is from 'GELD_OPNEMEN' page
+                // '#' is used as a backspace
                 if(pincodeCharacter == "#") {
                   ws.send(JSON.stringify({
                     "type": "GELD_INVOEREN",
@@ -186,18 +197,21 @@ wss.on('connection', ws => {
                     cash_count--;
                     cash_input = cash_input.substring(0, cash_input.length-1);
                   }
-                } else if(pincodeCharacter == "*") {
+                } else if(pincodeCharacter == "*") { // '*' is used as an enter key
+                  // Cash amount must be between 5-100 and must not be empty
                   if(parseInt(cash_input) > 100 || parseInt(cash_input) < 5 || cash_input == "") {
                     ws.send(JSON.stringify({
                       "type": "ERROR",
                       "data": "INVALID_CASH_AMOUNT"
                     }));
+                    // Cash amount must be a multiple of 5
                   } else if(parseInt(cash_input) % 5 != 0) {
                     ws.send(JSON.stringify({
                       "type": "ERROR",
                       "data": "INVALID_MULTIPLE"
                     }));
                   } else {
+                    // Checking if the customer has enough balance
                     db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
                       if(rows[0].Balance < parseInt(cash_input)) {
                         ws.send(JSON.stringify({
@@ -233,6 +247,7 @@ wss.on('connection', ws => {
             global_uid = data.trim();
             console.log(global_uid);
 
+            // Looking if the scanned UID is in the database
             db.query("SELECT Customer_ID, Card_blocked FROM Customer WHERE Pass_number = ?", [global_uid]).then(([rows, fields]) => {
               if(rows.length == 0) {
                 ws.send(JSON.stringify({
@@ -241,12 +256,14 @@ wss.on('connection', ws => {
                 }));
                 CLIENT_STATE = "SCAN_CARD";
               } else {
-                if(rows[0].Card_blocked == true) {
+                // Checking if the card is blocked
+                if(rows[0].Card_blocked) {
                   ws.send(JSON.stringify({
                     "type": "ERROR",
                     "data": "CARD_BLOCKED"
                   }));
                 } else {
+                  // SCAN_CARD success
                   ws.send(JSON.stringify({
                     "type": "REDIRECT",
                     "data": "PINCODE"
@@ -261,7 +278,9 @@ wss.on('connection', ws => {
 
     // Incoming WebSockets Data
     ws.on('message', data => {
-      switch(data.toString()) {
+      let json_data = JSON.parse(data);
+
+      switch(json_data.type) {
         case "UITLOGGEN":
           ws.send(JSON.stringify({
             "type": "REDIRECT",
@@ -334,6 +353,8 @@ wss.on('connection', ws => {
             combinations = combinations.slice(0, 3);
           }
 
+          cash_combinations = combinations;
+
           ws.send(JSON.stringify({
             "type": "COMBINATIONS",
             "data": combinations,
@@ -341,18 +362,13 @@ wss.on('connection', ws => {
           }));
         
           break;
+        case "SELECT_COMBINATION":
+          let cash_combination = cash_combinations[json_data.number];
+
+          
+          break;
       }
     });
 });
-
-// APIs
-// app.get("/uitloggen", (req, res) => {
-//   ws.send(JSON.stringify({
-//     "type": "REDIRECT",
-//     "data": "SCAN_CARD"
-//   }));
-//   CLIENT_STATE = "SCAN_CARD";
-//   res.json({status: "success"});
-// });
 
 app.listen(80, () => console.log("Creating Server: http://localhost/"));
