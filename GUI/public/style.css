@@ -280,3 +280,38 @@ header {
     font-style: normal;
     cursor: not-allowed;
 }
+#receipt-option-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+}
+#receipt-option-title {
+    position: relative;
+    top: -15vh;
+    font-size: 50px;
+}
+.receipt-option-btn {
+    position: relative;
+    top: 150px;
+    background-color: #1b1e3d;
+    color: #fff;
+    font-size: 40px;
+    border: solid 1px #1b1e3d;
+    border-radius: 20px;
+    width: 20%;
+    height: 10vh;
+    font-family: "Overpass", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 655;
+    font-style: normal;
+    cursor: pointer;
+}
+#receipt-option-ja {
+    right: 25%;
+}
+#receipt-option-nee {
+    left: 25%;
+}

@@ -90,6 +90,7 @@ wss.on('connection', ws => {
     let cash_count = 0;
 
     let cash_combinations;
+    let cash_amount;
 
     // Incoming Serial data
     parser.on('data', (data) => {
@@ -354,6 +355,7 @@ wss.on('connection', ws => {
           }
 
           cash_combinations = combinations;
+          cash_amount = parseInt(cash_input);
 
           ws.send(JSON.stringify({
             "type": "COMBINATIONS",
@@ -365,7 +367,20 @@ wss.on('connection', ws => {
         case "SELECT_COMBINATION":
           let cash_combination = cash_combinations[json_data.number];
 
+          db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
+            let balance = rows[0].Balance;
+            let new_balance = balance - cash_amount;
+
+            db.query("UPDATE Customer SET Balance = ? WHERE Customer_ID = ?", [new_balance, user_id]);
+            console.log("Balance updated!");
+          });
+
+          ws.send(JSON.stringify({
+            "type": "REDIRECT",
+            "data": "RECEIPT_OPTION"
+          }));
           
+          CLIENT_STATE = "RECEIPT_OPTION";
           break;
       }
     });

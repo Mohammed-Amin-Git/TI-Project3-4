@@ -7,7 +7,8 @@ const pages = {
     OPTIONS: "#options-page",
     GET_INFO: "#gegevens-ophalen",
     GELD_OPNEMEN: "#geld-opnemen-page",
-    CASH_COMBINATION: "#geld-combinatie-page"
+    CASH_COMBINATION: "#geld-combinatie-page",
+    RECEIPT_OPTION: "#receipt-option-page"
 };
 
 // DEBUG MODE
@@ -17,12 +18,13 @@ const pages = {
 // deactivate_page(pages.OPTIONS);
 // activate_page(pages.GET_INFO);
 
+//debug(pages.RECEIPT_OPTION);
+
 document.querySelector("#start").addEventListener("click", () => {
     deactivate_page(pages.CONNECT)
     activate_page(pages.SCAN_CARD)
 
     CLIENT_STATE = "SCAN_CARD";
-    let cash_combinations;
 
     const socket = new WebSocket("ws://localhost:8080");
 
@@ -88,6 +90,12 @@ document.querySelector("#start").addEventListener("click", () => {
                         "type": "GET_COMBINATIONS"
                     }));
                     CLIENT_STATE = "CASH_COMBINATION";
+                    break;
+                case "RECEIPT_OPTION":
+                    deactivate_page(pages.CASH_COMBINATION);
+                    activate_page(pages.RECEIPT_OPTION);
+
+                    CLIENT_STATE = "RECEIPT_OPTION";
                     break;
             }
         } else if(data.type == "ERROR") {
@@ -269,4 +277,14 @@ function activate_page(id) {
 
 function deactivate_page(id) {
     document.querySelector(id).classList.remove("active");
+}
+
+function debug(page) {
+    for(const [key, value] of Object.entries(pages)) {
+        if(value != page) {
+            deactivate_page(value);
+        } else {
+            activate_page(value);
+        }
+    }
 }
