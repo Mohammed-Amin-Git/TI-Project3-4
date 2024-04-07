@@ -95,16 +95,17 @@ wss.on('connection', ws => {
     // Incoming Serial data
     parser.on('data', (data) => {
       try {
-        // Parsing incoming pincode data
+        // Parsing incoming data
         let dataObj = JSON.parse(data);
+        //console.log(dataObj);
 
-        // Selecting which type of dat to handle
+        // Selecting which type of data to handle
         switch(dataObj.type) {
           case "KEYPAD":
               let pincodeCharacter = String.fromCharCode(dataObj.data);
               // Handle pincode data
               if(CLIENT_STATE == "PINCODE") {
-                  console.log(dataObj);
+                  // console.log(dataObj);
 
                   // '#' is used as a backspace
                   if(pincodeCharacter == "#") {
@@ -242,11 +243,29 @@ wss.on('connection', ws => {
                 }
               }
               break;
+            case "DISPENSE_STATUS":
+                console.log("Received dispense status");
+                if(dataObj.data == "SUCCESS") {
+                  ws.send(JSON.stringify({
+                    "type": "SUCCESS",
+                    "data": "DISPENSE_SUCCESS"
+                  }));
+                  console.log("Sending dispense success");
+
+                  ws.send(JSON.stringify({
+                    "type": "REDIRECT",
+                    "data": "RECEIPT_OPTION"
+                  }));
+                  console.log("Redirecting to receipt option");
+                  
+                  CLIENT_STATE = "RECEIPT_OPTION";
+                }
+              break;
           }
       } catch(err) { // Could not parse JSON data, so it is an UID
           if(CLIENT_STATE == "SCAN_CARD") {
             global_uid = data.trim();
-            console.log(global_uid);
+            // console.log(global_uid);
 
             // Looking if the scanned UID is in the database
             db.query("SELECT Customer_ID, Card_blocked FROM Customer WHERE Pass_number = ?", [global_uid]).then(([rows, fields]) => {
@@ -367,6 +386,7 @@ wss.on('connection', ws => {
         case "SELECT_COMBINATION":
           let cash_combination = cash_combinations[json_data.number];
 
+          // Updating the balace in the database
           db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
             let balance = rows[0].Balance;
             let new_balance = balance - cash_amount;
@@ -375,12 +395,19 @@ wss.on('connection', ws => {
             console.log("Balance updated!");
           });
 
+          // TODO: Send signal to the microcontroller to start dispensing money
+          port.write(JSON.stringify({
+            "type": "DISPENSE_CASH",
+            "cash_combination": cash_combination
+          }));
+
           ws.send(JSON.stringify({
             "type": "REDIRECT",
-            "data": "RECEIPT_OPTION"
+            "data": "DISPENSE_WAIT"
           }));
+          console.log("Redirecting to dispense wait");
           
-          CLIENT_STATE = "RECEIPT_OPTION";
+          CLIENT_STATE = "DISPENSE_WAIT";
           break;
       }
     });

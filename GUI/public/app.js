@@ -8,16 +8,11 @@ const pages = {
     GET_INFO: "#gegevens-ophalen",
     GELD_OPNEMEN: "#geld-opnemen-page",
     CASH_COMBINATION: "#geld-combinatie-page",
+    DISPENSE_WAIT: "#dispense-wait-page",
     RECEIPT_OPTION: "#receipt-option-page"
 };
 
 // DEBUG MODE
-// deactivate_page(pages.CONNECT);
-// deactivate_page(pages.SCAN_CARD);
-// deactivate_page(pages.PINCODE);
-// deactivate_page(pages.OPTIONS);
-// activate_page(pages.GET_INFO);
-
 //debug(pages.RECEIPT_OPTION);
 
 document.querySelector("#start").addEventListener("click", () => {
@@ -92,10 +87,17 @@ document.querySelector("#start").addEventListener("click", () => {
                     CLIENT_STATE = "CASH_COMBINATION";
                     break;
                 case "RECEIPT_OPTION":
-                    deactivate_page(pages.CASH_COMBINATION);
+                    deactivate_page(pages.DISPENSE_WAIT);
                     activate_page(pages.RECEIPT_OPTION);
 
                     CLIENT_STATE = "RECEIPT_OPTION";
+                    break;
+                case "DISPENSE_WAIT":
+                    deactivate_page(pages.CASH_COMBINATION);
+                    activate_page(pages.DISPENSE_WAIT);
+                    console.log("Activating dispense wait");
+
+                    CLIENT_STATE = "DISPENSE_WAIT";
                     break;
             }
         } else if(data.type == "ERROR") {
@@ -142,6 +144,16 @@ document.querySelector("#start").addEventListener("click", () => {
                         text: "Your balance is too low for this withdrawal",
                         icon: "error"
                     })
+            }
+        } else if(data.type == "SUCCESS") {
+            switch(data.data) {
+                case "DISPENSE_SUCCESS":
+                    Swal.fire({
+                        title: "Successfully dispensed money",
+                        text: "The cash dispensing went succesfully",
+                        icon: "success"
+                    });
+                    break;
             }
         } else if(data.type == "USER_DATA" && CLIENT_STATE == "OPTIONS") {
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;

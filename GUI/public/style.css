@@ -140,9 +140,9 @@ header {
     background-color: #1b1e3d;
     border: solid 1px #1b1e3d;
     color: #fff;
-    border-radius: 20px;
+    border-radius: 8px;
     margin: 30px;
-    width: 80%;
+    width: 70%;
     height: 8vh;
     font-weight: bold;
     font-size: 25px;
@@ -154,6 +154,20 @@ header {
     font-optical-sizing: auto;
     font-weight: 655;
     font-style: normal;
+}
+.arrow-button-right {
+    display: inline;
+    background-color: #fff;
+    color: #000;
+    position: absolute;
+    right: 9.5%;
+    transform: translateY(-24%);
+    height: 8.2vh;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    font-size: 35px;
+    width: 7%;
+    line-height: 66px;
 }
 .euro-img {
     width: 286.5px;

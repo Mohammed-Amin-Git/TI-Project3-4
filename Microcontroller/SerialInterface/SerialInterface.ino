@@ -6,6 +6,8 @@
 StaticJsonDocument<200> docRx;
 StaticJsonDocument<200> docTx;
 
+#define CASH_DISPENSE_DELAY 1200
+
 #define SS_PIN 10
 #define RST_PIN 9
  
@@ -45,32 +47,31 @@ void setup(){
 }
   
 void loop(){
+  if(Serial.available() > 0) {
+    String data = Serial.readStringUntil('\n');
+    DeserializationError error = deserializeJson(docRx, data);
+    String receive_type = docRx["type"];
+
+    Serial.println(receive_type);
+
+    if(receive_type == "DISPENSE_CASH") {
+      JsonArray cash_combination = docRx["cash_combination"].as<JsonArray>(); // Array that contains the pill to dispense
+
+      for(int i=0; i<cash_combination.size(); i++) {
+        int value = cash_combination[i].as<int>();
+        delay(CASH_DISPENSE_DELAY);
+        // TODO: Dispense money
+      }
+
+      transferString("DISPENSE_STATUS", "SUCCESS");
+    }
+  }
+
   char customKey = customKeypad.getKey();
   
   if (customKey){
     transferNumber("KEYPAD", customKey);
   }
-
-  // if ( ! rfid.PICC_IsNewCardPresent())
-  //   return;
-
-  // // Verify if the NUID has been readed
-  // if ( ! rfid.PICC_ReadCardSerial())
-  //   return;
-
-  // if (rfid.uid.uidByte[0] != nuidPICC[0] || 
-  //   rfid.uid.uidByte[1] != nuidPICC[1] || 
-  //   rfid.uid.uidByte[2] != nuidPICC[2] || 
-  //   rfid.uid.uidByte[3] != nuidPICC[3] ) {
-
-
-  //   // Store NUID into nuidPICC array
-  //   for (byte i = 0; i < 4; i++) {
-  //     nuidPICC[i] = rfid.uid.uidByte[i];
-  //   }
-   
-  //   printHex(rfid.uid.uidByte, rfid.uid.size);
-  // }
 
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
       printHex(rfid.uid.uidByte, rfid.uid.size);
