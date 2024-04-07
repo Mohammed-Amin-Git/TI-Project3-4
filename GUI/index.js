@@ -244,19 +244,16 @@ wss.on('connection', ws => {
               }
               break;
             case "DISPENSE_STATUS":
-                console.log("Received dispense status");
                 if(dataObj.data == "SUCCESS") {
                   ws.send(JSON.stringify({
                     "type": "SUCCESS",
                     "data": "DISPENSE_SUCCESS"
                   }));
-                  console.log("Sending dispense success");
 
                   ws.send(JSON.stringify({
                     "type": "REDIRECT",
                     "data": "RECEIPT_OPTION"
                   }));
-                  console.log("Redirecting to receipt option");
                   
                   CLIENT_STATE = "RECEIPT_OPTION";
                 }

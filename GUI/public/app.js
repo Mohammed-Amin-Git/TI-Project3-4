@@ -13,7 +13,7 @@ const pages = {
 };
 
 // DEBUG MODE
-//debug(pages.RECEIPT_OPTION);
+//debug(pages.DISPENSE_WAIT);
 
 document.querySelector("#start").addEventListener("click", () => {
     deactivate_page(pages.CONNECT)
@@ -95,7 +95,6 @@ document.querySelector("#start").addEventListener("click", () => {
                 case "DISPENSE_WAIT":
                     deactivate_page(pages.CASH_COMBINATION);
                     activate_page(pages.DISPENSE_WAIT);
-                    console.log("Activating dispense wait");
 
                     CLIENT_STATE = "DISPENSE_WAIT";
                     break;

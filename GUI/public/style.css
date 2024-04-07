@@ -329,3 +329,42 @@ header {
 #receipt-option-nee {
     left: 25%;
 }
+.loader {
+    width: 15px;
+    aspect-ratio: 1;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transform: scale(4);
+    transform-origin: center;
+    color: #1b1e3d;
+}
+#dispense-wait-container {
+    text-align: center;
+}
+#dispense-wait-container h1 {
+    font-size: 50px;
+}
+.loader::before,
+.loader::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #1b1e3d;;
+}
+.loader::before {
+    box-shadow: -25px 0;
+    animation: l8-1 1s infinite linear;
+}
+.loader::after {
+    transform: rotate(0deg) translateX(25px);
+    animation: l8-2 1s infinite linear;
+}  
+@keyframes l8-1 {
+    100%{transform: translateX(25px)}
+}
+@keyframes l8-2 {
+    100%{transform: rotate(-180deg) translateX(25px)}
+}
