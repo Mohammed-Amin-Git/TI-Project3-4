@@ -5,6 +5,7 @@ import { WebSocketServer } from 'ws';
 import mysql from 'mysql2/promise';
 import express, { json } from 'express';
 import 'dotenv/config';
+import moment from 'moment';
 import { findCashCombinations } from './cashCombination.js';
 
 const app = express();
@@ -392,7 +393,11 @@ wss.on('connection', ws => {
             console.log("Balance updated!");
           });
 
-          // TODO: Send signal to the microcontroller to start dispensing money
+          // Adding transcation to the database
+          let current_date = moment().format('YYYY-MM-DD hh:mm:ss');
+          db.query("INSERT INTO Transaction (Date, Customer_ID, Transcation_amount) VALUES(?,?,?)", [current_date, user_id, cash_amount]);
+
+          // Sending cash_combination array to the microcontroller so that it can be dispensed
           port.write(JSON.stringify({
             "type": "DISPENSE_CASH",
             "cash_combination": cash_combination
@@ -405,6 +410,16 @@ wss.on('connection', ws => {
           console.log("Redirecting to dispense wait");
           
           CLIENT_STATE = "DISPENSE_WAIT";
+          break;
+        case "PRINT_RECEIPT":
+          if(json_data.receipt_option) {
+            // TODO: Send data to the microcontroller to print the receipt
+          }
+
+          ws.send(JSON.stringify({
+            "type": "REDIRECT",
+            "data": "OPTIONS"
+          }))
           break;
       }
     });

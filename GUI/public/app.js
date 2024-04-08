@@ -26,13 +26,6 @@ document.querySelector("#start").addEventListener("click", () => {
     socket.addEventListener("message", event => {
         let data = JSON.parse(event.data);
 
-        // if(data.type == "REDIRECT" && data.data == "PINCODE") {
-        //     deactivate_page(pages.SCAN_CARD);
-        //     activate_page(pages.PINCODE);
-
-        //     CLIENT_STATE = "PINCODE";
-        // }
-
         if(data.type == "REDIRECT") {
             switch(data.data) {
                 case "SCAN_CARD":
@@ -53,6 +46,7 @@ document.querySelector("#start").addEventListener("click", () => {
                     deactivate_page(pages.PINCODE);
                     deactivate_page(pages.GET_INFO);
                     deactivate_page(pages.GELD_OPNEMEN);
+                    deactivate_page(pages.RECEIPT_OPTION);
                     activate_page(pages.OPTIONS);
 
                     socket.send(JSON.stringify({
@@ -278,6 +272,19 @@ document.querySelector("#start").addEventListener("click", () => {
         socket.send(JSON.stringify({
             "type": "SELECT_COMBINATION",
             "number": 2
+        }));
+    });
+
+    document.querySelector("#receipt-option-nee").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "PRINT_RECEIPT",
+            "receipt_option": false
+        }));
+    });
+    document.querySelector("#receipt-option-ja").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "PRINT_RECEIPT",
+            "receipt_option": true
         }));
     });
 });
