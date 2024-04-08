@@ -9,11 +9,12 @@ const pages = {
     GELD_OPNEMEN: "#geld-opnemen-page",
     CASH_COMBINATION: "#geld-combinatie-page",
     DISPENSE_WAIT: "#dispense-wait-page",
-    RECEIPT_OPTION: "#receipt-option-page"
+    RECEIPT_OPTION: "#receipt-option-page",
+    TRANSACTION: "#transaction-page"
 };
 
 // DEBUG MODE
-//debug(pages.DISPENSE_WAIT);
+//debug(pages.TRANSACTION);
 
 document.querySelector("#start").addEventListener("click", () => {
     deactivate_page(pages.CONNECT)
@@ -47,7 +48,12 @@ document.querySelector("#start").addEventListener("click", () => {
                     deactivate_page(pages.GET_INFO);
                     deactivate_page(pages.GELD_OPNEMEN);
                     deactivate_page(pages.RECEIPT_OPTION);
+                    deactivate_page(pages.TRANSACTION);
                     activate_page(pages.OPTIONS);
+
+                    if(CLIENT_STATE == "TRANSACTION") {
+                        document.querySelector("#transaction-container").replaceChildren();
+                    }
 
                     socket.send(JSON.stringify({
                         "type": "USER_DATA"
@@ -91,6 +97,15 @@ document.querySelector("#start").addEventListener("click", () => {
                     activate_page(pages.DISPENSE_WAIT);
 
                     CLIENT_STATE = "DISPENSE_WAIT";
+                    break;
+                case "TRANSACTION":
+                    deactivate_page(pages.OPTIONS);
+                    activate_page(pages.TRANSACTION);
+                    
+                    socket.send(JSON.stringify({
+                        "type": "GET_TRANSACTION"
+                    }));
+                    CLIENT_STATE = "TRANSACTION";
                     break;
             }
         } else if(data.type == "ERROR") {
@@ -223,6 +238,38 @@ document.querySelector("#start").addEventListener("click", () => {
             }
 
             document.querySelector("#biljetkeuze").innerHTML = `Biljetkeuze €${data.amount}`;
+        } else if(data.type == "TRANSACTIONS" && CLIENT_STATE == "TRANSACTION") {
+            let transactionContainer = document.querySelector("#transaction-container");
+            data.transactions.forEach(row => {
+                let transactionDiv = document.createElement("div");
+                transactionDiv.className = "transaction-div";
+
+                let transactionID = document.createElement("p");
+                transactionID.innerText = `ID: ${row.Transaction_ID}`;
+
+                let dateTime = new Date(row.Date);
+                let formattedDateTime = new Intl.DateTimeFormat('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                }).format(dateTime);
+
+                let transactionDate = document.createElement("p");
+                transactionDate.innerText = `Date: ${formattedDateTime}`;
+
+                let transactionAmount = document.createElement("p");
+                transactionAmount.innerText = `Amount: ${row.Transaction_amount}`;
+
+                transactionDiv.appendChild(transactionID);
+                transactionDiv.appendChild(transactionDate);
+                transactionDiv.appendChild(transactionAmount);
+
+                transactionContainer.appendChild(transactionDiv);
+            });
         }
 
     })
@@ -285,6 +332,12 @@ document.querySelector("#start").addEventListener("click", () => {
         socket.send(JSON.stringify({
             "type": "PRINT_RECEIPT",
             "receipt_option": true
+        }));
+    });
+
+    document.querySelector("#transaction-btn").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "TRANSACTION"
         }));
     });
 });

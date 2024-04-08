@@ -354,6 +354,13 @@ wss.on('connection', ws => {
             cash_input = "";
             cash_count = 0;
             CLIENT_STATE = "GELD_OPNEMEN";
+          } else if(CLIENT_STATE == "TRANSACTION") {
+            ws.send(JSON.stringify({
+              "type": "REDIRECT",
+              "data": "OPTIONS"
+            }));
+
+            CLIENT_STATE = "OPTIONS";
           }
           break;
         case "GELD_OPNEMEN":
@@ -395,7 +402,7 @@ wss.on('connection', ws => {
 
           // Adding transcation to the database
           let current_date = moment().format('YYYY-MM-DD hh:mm:ss');
-          db.query("INSERT INTO Transaction (Date, Customer_ID, Transcation_amount) VALUES(?,?,?)", [current_date, user_id, cash_amount]);
+          db.query("INSERT INTO Transaction (Date, Customer_ID, Transaction_amount) VALUES(?,?,?)", [current_date, user_id, cash_amount]);
 
           // Sending cash_combination array to the microcontroller so that it can be dispensed
           port.write(JSON.stringify({
@@ -407,7 +414,6 @@ wss.on('connection', ws => {
             "type": "REDIRECT",
             "data": "DISPENSE_WAIT"
           }));
-          console.log("Redirecting to dispense wait");
           
           CLIENT_STATE = "DISPENSE_WAIT";
           break;
@@ -420,6 +426,21 @@ wss.on('connection', ws => {
             "type": "REDIRECT",
             "data": "OPTIONS"
           }))
+          break;
+        case "TRANSACTION":
+          ws.send(JSON.stringify({
+            "type": "REDIRECT",
+            "data": "TRANSACTION"
+          }));
+
+          CLIENT_STATE = "TRANSACTION";
+
+          db.query("SELECT Transaction_ID, Date, Transaction_amount FROM Transaction WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
+            ws.send(JSON.stringify({
+              "type": "TRANSACTIONS",
+              "transactions": rows
+            }));
+          }); 
           break;
       }
     });
