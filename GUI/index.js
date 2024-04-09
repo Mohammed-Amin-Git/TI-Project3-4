@@ -273,13 +273,6 @@ wss.on('connection', ws => {
                 }));
 
                 CLIENT_STATE = "OPTIONS";
-              } else if(dataObj.data == "REDIRECT") {
-                ws.send(JSON.stringify({
-                  "type": "REDIRECT",
-                  "data": "RECEIPT_WAIT"
-                }));
-
-                CLIENT_STATE = "RECEIPT_WAIT";
               }
               break;
           }
@@ -455,6 +448,13 @@ wss.on('connection', ws => {
                 "transaction_id": rows[0].Transcation_ID.toString()
               }));
             });
+
+            ws.send(JSON.stringify({
+              "type": "REDIRECT",
+              "data": "RECEIPT_WAIT"
+            }));
+
+            CLIENT_STATE = "RECEIPT_WAIT";
           } else {
             ws.send(JSON.stringify({
               "type": "REDIRECT",

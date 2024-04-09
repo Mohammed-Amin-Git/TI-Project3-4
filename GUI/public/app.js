@@ -15,7 +15,7 @@ const pages = {
 };
 
 // DEBUG MODE
-//debug(pages.TRANSACTION);
+//debug(pages.RECEIPT_WAIT);
 
 document.querySelector("#start").addEventListener("click", () => {
     deactivate_page(pages.CONNECT)

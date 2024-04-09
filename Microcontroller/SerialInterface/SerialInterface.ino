@@ -79,8 +79,6 @@ void loop(){
       String iban = docRx["iban"];
       String transaction_id = docRx["transaction_id"];
 
-      transferString("RECEIPT_STATUS", "REDIRECT");
-
       printBon(date, amount, iban, transaction_id, combination);
 
       transferString("RECEIPT_STATUS", "SUCCESS");
