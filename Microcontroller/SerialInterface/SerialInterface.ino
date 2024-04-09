@@ -78,8 +78,8 @@ void loop(){
       String combination = docRx["combination"];
       String iban = docRx["iban"];
       String transaction_id = docRx["transaction_id"];
-      Serial.println(date + amount + combination + iban + transaction_id);
 
+      transferString("RECEIPT_STATUS", "REDIRECT");
 
       printBon(date, amount, iban, transaction_id, combination);
 

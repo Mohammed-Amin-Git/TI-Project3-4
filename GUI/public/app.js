@@ -10,7 +10,8 @@ const pages = {
     CASH_COMBINATION: "#geld-combinatie-page",
     DISPENSE_WAIT: "#dispense-wait-page",
     RECEIPT_OPTION: "#receipt-option-page",
-    TRANSACTION: "#transaction-page"
+    TRANSACTION: "#transaction-page",
+    RECEIPT_WAIT: "#receipt-wait-page"
 };
 
 // DEBUG MODE
@@ -49,6 +50,7 @@ document.querySelector("#start").addEventListener("click", () => {
                     deactivate_page(pages.GELD_OPNEMEN);
                     deactivate_page(pages.RECEIPT_OPTION);
                     deactivate_page(pages.TRANSACTION);
+                    deactivate_page(pages.RECEIPT_WAIT);
                     activate_page(pages.OPTIONS);
 
                     if(CLIENT_STATE == "TRANSACTION") {
@@ -112,6 +114,11 @@ document.querySelector("#start").addEventListener("click", () => {
                         "type": "GET_TRANSACTION"
                     }));
                     CLIENT_STATE = "TRANSACTION";
+                    break;
+                case "RECEIPT_WAIT":
+                    deactivate_page(pages.RECEIPT_OPTION);
+                    activate_page(pages.RECEIPT_WAIT);
+                    CLIENT_STATE = "RECEIPT_WAIT";
                     break;
             }
         } else if(data.type == "ERROR") {
@@ -295,7 +302,6 @@ document.querySelector("#start").addEventListener("click", () => {
     // OPTIONS
 
     document.querySelector("#uitloggen").addEventListener('click', () => {
-        console.log('click');
         socket.send(JSON.stringify({
             "type": "UITLOGGEN"
         }));

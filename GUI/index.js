@@ -273,7 +273,14 @@ wss.on('connection', ws => {
                 }));
 
                 CLIENT_STATE = "OPTIONS";
-              }  
+              } else if(dataObj.data == "REDIRECT") {
+                ws.send(JSON.stringify({
+                  "type": "REDIRECT",
+                  "data": "RECEIPT_WAIT"
+                }));
+
+                CLIENT_STATE = "RECEIPT_WAIT";
+              }
               break;
           }
       } catch(err) { // Could not parse JSON data, so it is an UID

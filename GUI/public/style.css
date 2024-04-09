@@ -395,3 +395,13 @@ header {
     position: relative;
     left: 10px;
 }
+#receipt-wait-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+#receipt-bon {
+    font-size: 50px;
+}
