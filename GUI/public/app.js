@@ -170,7 +170,19 @@ document.querySelector("#start").addEventListener("click", () => {
             document.querySelector("#gegevens-naam").innerHTML = "Naam: " + data.name;
             document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + data.iban;
             document.querySelector("#gegevens-saldo").innerHTML = "Saldo: €" + data.balance;
-            document.querySelector("#gegevens-datum").innerHTML = "Gemaakt op: " + data.creation_date.split("T")[0];
+
+            let dateTime = new Date(data.creation_date);
+            let formattedDateTime = new Intl.DateTimeFormat('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+            }).format(dateTime);
+
+            document.querySelector("#gegevens-datum").innerHTML = "Gemaakt op: " + formattedDateTime;
         
         } else if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {
             let pincodePlaceholder = document.querySelector("#pincode-placeholder");
@@ -245,7 +257,7 @@ document.querySelector("#start").addEventListener("click", () => {
                 transactionDiv.className = "transaction-div";
 
                 let transactionID = document.createElement("p");
-                transactionID.innerText = `ID: ${row.Transaction_ID}`;
+                transactionID.innerText = `Transcation ID: ${row.Transaction_ID}`;
 
                 let dateTime = new Date(row.Date);
                 let formattedDateTime = new Intl.DateTimeFormat('en-GB', {
@@ -262,7 +274,7 @@ document.querySelector("#start").addEventListener("click", () => {
                 transactionDate.innerText = `Date: ${formattedDateTime}`;
 
                 let transactionAmount = document.createElement("p");
-                transactionAmount.innerText = `Amount: ${row.Transaction_amount}`;
+                transactionAmount.innerText = `Amount: €${row.Transaction_amount}`;
 
                 transactionDiv.appendChild(transactionID);
                 transactionDiv.appendChild(transactionDate);

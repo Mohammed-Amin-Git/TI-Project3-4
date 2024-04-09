@@ -388,4 +388,10 @@ header {
 .transaction-div p {
     position: relative;
     left: 10px;
+    line-height: 4px;
+    font-size: 20px;
+}
+#transaction-container h2 {
+    position: relative;
+    left: 10px;
 }

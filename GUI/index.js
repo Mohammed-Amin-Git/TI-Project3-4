@@ -6,7 +6,7 @@ import mysql from 'mysql2/promise';
 import express, { json } from 'express';
 import 'dotenv/config';
 import moment from 'moment';
-import { findCashCombinations } from './cashCombination.js';
+import { cashCombinationArrayToString, findCashCombinations } from './cashCombination.js';
 
 const app = express();
 const wss = new WebSocketServer({ port: 8080 });
@@ -91,13 +91,17 @@ wss.on('connection', ws => {
     let cash_count = 0;
 
     let cash_combinations;
+    let cash_combination;
     let cash_amount;
+
+    let global_current_date;
 
     // Incoming Serial data
     parser.on('data', (data) => {
       try {
         // Parsing incoming data
         let dataObj = JSON.parse(data);
+        console.log(dataObj);
         //console.log(dataObj);
 
         // Selecting which type of data to handle
@@ -119,18 +123,7 @@ wss.on('connection', ws => {
                       pincode_count--;
                       pincode_input = pincode_input.substring(0, pincode_input.length-1);
                     }
-                  } else if(pincodeCharacter != "*") {
-                    // Sending pincode number to client
-                    ws.send(JSON.stringify({
-                      "type": "PINCODE",
-                      "data": "*"
-                    }));
-                    pincode_count++;
-                    pincode_input += pincodeCharacter;
-                  }
-
-                  // When pincode length is equal to 4, then check the pincode
-                  if(pincode_count >= 4) {
+                  } else if(pincodeCharacter == "*") {
                     CLIENT_STATE = "OPTIONS";
                     pincode_count = 0;
 
@@ -187,6 +180,19 @@ wss.on('connection', ws => {
                     });
 
                     pincode_input = "";
+                  } else if(pincode_count < 4) {
+                    // Sending pincode number to client
+                    ws.send(JSON.stringify({
+                      "type": "PINCODE",
+                      "data": "*"
+                    }));
+                    pincode_count++;
+                    pincode_input += pincodeCharacter;
+                  }
+
+                  // When pincode length is equal to 4, then check the pincode
+                  if(pincode_count >= 4) {
+                    
                   } 
               } else if(CLIENT_STATE == "GELD_OPNEMEN") { // Keypad data is from 'GELD_OPNEMEN' page
                 // '#' is used as a backspace
@@ -258,6 +264,16 @@ wss.on('connection', ws => {
                   
                   CLIENT_STATE = "RECEIPT_OPTION";
                 }
+              break;
+            case "RECEIPT_STATUS":
+              if(dataObj.data == "SUCCESS") {
+                ws.send(JSON.stringify({
+                  "type": "REDIRECT",
+                  "data": "OPTIONS"
+                }));
+
+                CLIENT_STATE = "OPTIONS";
+              }  
               break;
           }
       } catch(err) { // Could not parse JSON data, so it is an UID
@@ -389,7 +405,9 @@ wss.on('connection', ws => {
         
           break;
         case "SELECT_COMBINATION":
-          let cash_combination = cash_combinations[json_data.number];
+          cash_input = "";
+          cash_count = 0;
+          cash_combination = cash_combinations[json_data.number];
 
           // Updating the balace in the database
           db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
@@ -401,8 +419,8 @@ wss.on('connection', ws => {
           });
 
           // Adding transcation to the database
-          let current_date = moment().format('YYYY-MM-DD hh:mm:ss');
-          db.query("INSERT INTO Transaction (Date, Customer_ID, Transaction_amount) VALUES(?,?,?)", [current_date, user_id, cash_amount]);
+          global_current_date = moment().format('YYYY-MM-DD hh:mm:ss');
+          db.query("INSERT INTO Transaction (Date, Customer_ID, Transaction_amount) VALUES(?,?,?)", [global_current_date, user_id, cash_amount]);
 
           // Sending cash_combination array to the microcontroller so that it can be dispensed
           port.write(JSON.stringify({
@@ -419,13 +437,32 @@ wss.on('connection', ws => {
           break;
         case "PRINT_RECEIPT":
           if(json_data.receipt_option) {
-            // TODO: Send data to the microcontroller to print the receipt
-          }
+            // Sending data to the microcontroller so that it can print a receipt
+            db.query("SELECT MAX(Transaction.Transaction_ID) AS Transcation_ID, Customer.IBAN FROM Transaction INNER JOIN Customer ON Transaction.Customer_ID = Customer.Customer_ID WHERE Customer.Customer_ID = ?;", [user_id]).then(([rows, fields]) => {
+              port.write(JSON.stringify({
+                "type": "PRINT_RECEIPT",
+                "date": global_current_date,
+                "amount": cash_amount.toString(),
+                "combination": cashCombinationArrayToString(cash_combination),
+                "iban": rows[0].IBAN, // TODO: Obfuscate IBAN before sending to the microcontroller
+                "transaction_id": rows[0].Transcation_ID
+              }));
+            });
 
-          ws.send(JSON.stringify({
-            "type": "REDIRECT",
-            "data": "OPTIONS"
-          }))
+            ws.send(JSON.stringify({
+              "type": "REDIRECT",
+              "data": "OPTIONS"
+            }));
+
+            CLIENT_STATE = "OPTIONS";
+          } else {
+            ws.send(JSON.stringify({
+              "type": "REDIRECT",
+              "data": "OPTIONS"
+            }));
+
+            CLIENT_STATE = "OPTIONS";
+          }
           break;
         case "TRANSACTION":
           ws.send(JSON.stringify({

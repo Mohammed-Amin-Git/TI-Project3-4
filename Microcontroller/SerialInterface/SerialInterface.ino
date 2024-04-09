@@ -52,8 +52,6 @@ void loop(){
     DeserializationError error = deserializeJson(docRx, data);
     String receive_type = docRx["type"];
 
-    Serial.println(receive_type);
-
     if(receive_type == "DISPENSE_CASH") {
       JsonArray cash_combination = docRx["cash_combination"].as<JsonArray>(); // Array that contains the pill to dispense
 
@@ -64,6 +62,16 @@ void loop(){
       }
 
       transferString("DISPENSE_STATUS", "SUCCESS");
+    } else if(receive_type == "PRINT_RECEIPT") {
+      String date = docRx["date"];
+      String amount = docRx["amount"];
+      String combination = docRx["combination"];
+      String iban = docRx["iban"];
+      String transaction_id = docRx["transaction_id"];
+
+      // TODO: Print receipt using received data
+
+      transferString("RECEIPT_STATUS", "SUCCESS");
     }
   }
 
