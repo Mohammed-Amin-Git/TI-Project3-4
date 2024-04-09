@@ -53,7 +53,7 @@ document.querySelector("#start").addEventListener("click", () => {
 
                     if(CLIENT_STATE == "TRANSACTION") {
                         document.querySelector("#transaction-container").replaceChildren();
-                    }
+                    } else if(CLIENT_STATE == "")
 
                     socket.send(JSON.stringify({
                         "type": "USER_DATA"
@@ -68,6 +68,10 @@ document.querySelector("#start").addEventListener("click", () => {
                 case "GELD_OPNEMEN":
                     document.querySelector("#cash-placeholder").value = "€";
                     console.log("Resetting cash placeholder")
+
+                    if(CLIENT_STATE == "CASH_COMBINATION") {
+                        resetCashCombinationButtons();
+                    }
 
                     deactivate_page(pages.OPTIONS);
                     deactivate_page(pages.CASH_COMBINATION);
@@ -95,6 +99,8 @@ document.querySelector("#start").addEventListener("click", () => {
                 case "DISPENSE_WAIT":
                     deactivate_page(pages.CASH_COMBINATION);
                     activate_page(pages.DISPENSE_WAIT);
+
+                    resetCashCombinationButtons();
 
                     CLIENT_STATE = "DISPENSE_WAIT";
                     break;
@@ -369,5 +375,13 @@ function debug(page) {
         } else {
             activate_page(value);
         }
+    }
+}
+
+function resetCashCombinationButtons() {
+    for(let btn of document.getElementsByClassName("btn2")) {
+        btn.innerHTML = '<i class="fa-solid fa-xmark">';
+        btn.disabled = true;
+        btn.style.cursor = "not-allowed";
     }
 }

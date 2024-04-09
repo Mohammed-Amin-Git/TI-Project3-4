@@ -445,16 +445,9 @@ wss.on('connection', ws => {
                 "amount": cash_amount.toString(),
                 "combination": cashCombinationArrayToString(cash_combination),
                 "iban": rows[0].IBAN, // TODO: Obfuscate IBAN before sending to the microcontroller
-                "transaction_id": rows[0].Transcation_ID
+                "transaction_id": rows[0].Transcation_ID.toString()
               }));
             });
-
-            ws.send(JSON.stringify({
-              "type": "REDIRECT",
-              "data": "OPTIONS"
-            }));
-
-            CLIENT_STATE = "OPTIONS";
           } else {
             ws.send(JSON.stringify({
               "type": "REDIRECT",
