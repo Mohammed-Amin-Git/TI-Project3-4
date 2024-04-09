@@ -341,9 +341,10 @@ wss.on('connection', ws => {
           }));
           CLIENT_STATE = "GET_INFO";
 
-          db.query("SELECT Name, Balance, IBAN, Creation_date FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
+          db.query("SELECT Customer_ID, Name, Balance, IBAN, Creation_date FROM Customer WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
             ws.send(JSON.stringify({
               "type": "GET_INFO",
+              "customer_id": rows[0].Customer_ID,
               "name": rows[0].Name,
               "balance": rows[0].Balance,
               "iban": rows[0].IBAN,
@@ -472,7 +473,7 @@ wss.on('connection', ws => {
 
           CLIENT_STATE = "TRANSACTION";
 
-          db.query("SELECT Transaction_ID, Date, Transaction_amount FROM Transaction WHERE Customer_ID = ?", [user_id]).then(([rows, fields]) => {
+          db.query("SELECT Transaction_ID, Date, Transaction_amount FROM Transaction WHERE Customer_ID = ? ORDER BY Transaction_ID DESC", [user_id]).then(([rows, fields]) => {
             ws.send(JSON.stringify({
               "type": "TRANSACTIONS",
               "transactions": rows

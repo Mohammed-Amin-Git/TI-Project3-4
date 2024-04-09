@@ -180,6 +180,7 @@ document.querySelector("#start").addEventListener("click", () => {
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
         
         } else if(data.type == "GET_INFO" && CLIENT_STATE == "GET_INFO") {
+            document.querySelector("#gegevens-id").innerHTML = "ID: " + data.customer_id;
             document.querySelector("#gegevens-naam").innerHTML = "Naam: " + data.name;
             document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + data.iban;
             document.querySelector("#gegevens-saldo").innerHTML = "Saldo: €" + data.balance;
@@ -265,12 +266,17 @@ document.querySelector("#start").addEventListener("click", () => {
             document.querySelector("#biljetkeuze").innerHTML = `Biljetkeuze €${data.amount}`;
         } else if(data.type == "TRANSACTIONS" && CLIENT_STATE == "TRANSACTION") {
             let transactionContainer = document.querySelector("#transaction-container");
+            
+            let transactionTitle = document.createElement("h2");
+            transactionTitle.innerHTML = "Transaction History";
+            transactionContainer.appendChild(transactionTitle);
+            
             data.transactions.forEach(row => {
                 let transactionDiv = document.createElement("div");
                 transactionDiv.className = "transaction-div";
 
                 let transactionID = document.createElement("p");
-                transactionID.innerText = `Transcation ID: ${row.Transaction_ID}`;
+                transactionID.innerText = `Transcation ID: #${row.Transaction_ID}`;
 
                 let dateTime = new Date(row.Date);
                 let formattedDateTime = new Intl.DateTimeFormat('en-GB', {
