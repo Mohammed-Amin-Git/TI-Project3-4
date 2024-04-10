@@ -55,7 +55,7 @@ document.querySelector("#start").addEventListener("click", () => {
 
                     if(CLIENT_STATE == "TRANSACTION") {
                         document.querySelector("#transaction-container").replaceChildren();
-                    } else if(CLIENT_STATE == "")
+                    }
 
                     socket.send(JSON.stringify({
                         "type": "USER_DATA"

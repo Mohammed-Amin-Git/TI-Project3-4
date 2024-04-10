@@ -279,7 +279,7 @@ wss.on('connection', ws => {
       } catch(err) { // Could not parse JSON data, so it is an UID
           if(CLIENT_STATE == "SCAN_CARD") {
             global_uid = data.trim();
-            // console.log(global_uid);
+            console.log(global_uid);
 
             // Looking if the scanned UID is in the database
             db.query("SELECT Customer_ID, Card_blocked FROM Customer WHERE Pass_number = ?", [global_uid]).then(([rows, fields]) => {
