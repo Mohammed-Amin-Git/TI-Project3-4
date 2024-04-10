@@ -27,6 +27,7 @@ document.querySelector("#start").addEventListener("click", () => {
 
     socket.addEventListener("message", event => {
         let data = JSON.parse(event.data);
+        console.log(data);
 
         if(data.type == "REDIRECT") {
             switch(data.data) {
