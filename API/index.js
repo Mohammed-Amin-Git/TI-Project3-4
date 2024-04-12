@@ -13,3 +13,13 @@ app.get("/api/noob/health", (req, res) => {
 		"status": "OK"
 	});
 });
+
+app.get("/api/accountinfo", (req, res) => {
+	let iban = req.query.iban;
+	let pincode = req.query.iban;
+	let uid = req.query.iban;
+
+	if(!iban || !pincode || !uid) {
+		res.status(400).json();
+	}
+});

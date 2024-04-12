@@ -1,4 +1,4 @@
-import { handleWebSocketConnection } from './handleWebSocketConnection.js';
+import { handleWebSocketConnection } from './modules/handleWebSocketConnection.js';
 import express, { json } from 'express';
 import { WebSocketServer } from 'ws';
 import 'dotenv/config';
