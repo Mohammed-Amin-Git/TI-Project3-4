@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This is the nodejs application for the api that communicates with the NOOB Server. This is part of Project3/4 of Technische Informatica (Hogeschool Rotterdam)",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
