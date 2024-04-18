@@ -28,7 +28,7 @@ export function blockCardOfCustomer(customer_id) {
 export function updateAttemptsRemaining(attempts, customer_id) {
 	if(Object.keys(attempts).includes(customer_id.toString())) {
 		if(attempts[customer_id] > 0) {
-			attempts[customer_id] = attempts[customer_id] - 1;
+			attempts[customer_id] -= 1;
 		}
 	} else {
 		attempts[customer_id] = 2;

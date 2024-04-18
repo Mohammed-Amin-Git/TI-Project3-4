@@ -36,7 +36,7 @@ export function handleWebSocketConnection(ws) {
 
     // Handle Incoming Serial data
     parser.on('data', data => {
-      handleSerialConnection(ws, data);
+      handleSerialConnection(ws, data, port);
     });
 
     // Handle Incoming WebSockets Data

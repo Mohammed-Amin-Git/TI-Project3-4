@@ -3,7 +3,7 @@ import { handleIncomingUID } from "./handleIncomingUID.js";
 import { handlePincodeData } from "./handlePincodeData.js";
 import { global_vars } from "./handleWebSocketConnection.js";
 
-export function handleSerialConnection(ws, data) {
+export function handleSerialConnection(ws, data, port) {
     try {
         // Parsing incoming data
         let dataObj = JSON.parse(data);
@@ -46,6 +46,9 @@ export function handleSerialConnection(ws, data) {
                 global_vars.CLIENT_STATE = "OPTIONS";
               }
               break;
+          case "RECEIPT_RESEND":
+            port.write(dataObj.data);
+            break;
           }
       } catch(err) { // Could not parse JSON data, so it is an UID
           if(global_vars.CLIENT_STATE == "SCAN_CARD" && err instanceof SyntaxError) {

@@ -46,8 +46,7 @@ long cardInterval = 2500;
 
 void setup(){
   Serial.begin(9600);
-  mySerial.begin(19200);
-  printer.begin();   
+  mySerial.begin(19200);   
   SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522 
 
@@ -61,6 +60,8 @@ void loop(){
     String data = Serial.readStringUntil('\n');
     DeserializationError error = deserializeJson(docRx, data);
     String receive_type = docRx["type"];
+
+    Serial.println(data);
 
     if(receive_type == "DISPENSE_CASH") {
       JsonArray cash_combination = docRx["cash_combination"].as<JsonArray>(); // Array that contains the pill to dispense
@@ -79,9 +80,12 @@ void loop(){
       String iban = docRx["iban"];
       String transaction_id = docRx["transaction_id"];
 
-      printBon(date, amount, iban, transaction_id, combination);
-
-      transferString("RECEIPT_STATUS", "SUCCESS");
+      if(iban == "") {
+        transferString("RECEIPT_RESEND", data);
+      } else {
+        printBon(date, amount, iban, transaction_id, combination);
+        transferString("RECEIPT_STATUS", "SUCCESS"); 
+      }
     }
   }
 
@@ -129,7 +133,7 @@ void printHex(byte *buffer, byte bufferSize) {
 
 void printBon(String datum, String bedrag, String rekening, String transactie, String briefjes){
   // printer.begin();        // Init printer (same regardless of serial type)
-
+  printer.begin();
   // The following calls are in setup(), but don't *need* to be.  Use them
   // anywhere!  They're just here so they run one time and are not printed
   // over and over (which would happen if they were in loop() instead).

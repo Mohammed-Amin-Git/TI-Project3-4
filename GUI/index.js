@@ -4,7 +4,7 @@ import { WebSocketServer } from 'ws';
 import 'dotenv/config';
 
 const app = express();
-const wss = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ port: process.env.WEB_SOCKET_PORT });
 
 // Express
 app.use(express.static('public'));
@@ -15,4 +15,4 @@ wss.on('connection', ws => {
     handleWebSocketConnection(ws);
 });
 
-app.listen(80, () => console.log("Creating Server: http://localhost/"));
+app.listen(process.env.PORT, () => console.log("Creating Server: http://localhost/"));

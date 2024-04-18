@@ -17,8 +17,8 @@ export function handleWebSocketData(ws, data, port) {
           global_vars.CLIENT_STATE = "SCAN_CARD";
           break;
         case "USER_DATA":
-          db.query("SELECT Name FROM Customer WHERE Customer_ID = ?", [global_vars.user_id]).then(([rows, fields]) => {
-            let name = rows[0].Name;
+          db.query("SELECT Firstname FROM Customer WHERE Customer_ID = ?", [global_vars.user_id]).then(([rows, fields]) => {
+            let name = rows[0].Firstname;
 
             ws.send(JSON.stringify({
               "type": "USER_DATA",
@@ -132,14 +132,17 @@ export function handleWebSocketData(ws, data, port) {
           if(json_data.receipt_option) {
             // Sending data to the microcontroller so that it can print a receipt
             db.query("SELECT MAX(Transaction.Transaction_ID) AS Transcation_ID, Customer.IBAN FROM Transaction INNER JOIN Customer ON Transaction.Customer_ID = Customer.Customer_ID WHERE Customer.Customer_ID = ?;", [global_vars.user_id]).then(([rows, fields]) => {
-              port.write(JSON.stringify({
+              let serialport_json_data = JSON.stringify({
                 "type": "PRINT_RECEIPT",
                 "date": global_vars.global_current_date,
                 "amount": global_vars.cash_amount.toString(),
                 "combination": cashCombinationArrayToString(global_vars.cash_combination),
                 "iban": rows[0].IBAN, // TODO: Obfuscate IBAN before sending to the microcontroller
                 "transaction_id": rows[0].Transcation_ID.toString()
-              }));
+              });
+              console.log(serialport_json_data);
+
+              port.write(serialport_json_data);
             });
 
             ws.send(JSON.stringify({
