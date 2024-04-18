@@ -4,12 +4,20 @@ import { handlePincodeData } from "./handlePincodeData.js";
 import { global_vars } from "./handleWebSocketConnection.js";
 
 export function handleSerialConnection(ws, data, port) {
-    try {
+        console.log(data);
         // Parsing incoming data
         let dataObj = JSON.parse(data);
 
         // Selecting which type of data to handle
         switch(dataObj.type) {
+          case "UID":
+            if(global_vars.CLIENT_STATE == "SCAN_CARD") {
+              let uid = dataObj.data.trim();
+              global_vars.global_uid = uid;
+  
+              handleIncomingUID(ws, uid);
+            }
+            break;
           case "KEYPAD":
               let keypadCharacter = String.fromCharCode(dataObj.data);
               
@@ -50,12 +58,4 @@ export function handleSerialConnection(ws, data, port) {
             port.write(dataObj.data);
             break;
           }
-      } catch(err) { // Could not parse JSON data, so it is an UID
-          if(global_vars.CLIENT_STATE == "SCAN_CARD" && err instanceof SyntaxError) {
-            let uid = data.trim();
-            global_vars.global_uid = uid;
-
-            handleIncomingUID(ws, uid);
-          } 
-      }
 }

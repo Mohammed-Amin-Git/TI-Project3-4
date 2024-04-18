@@ -26,6 +26,8 @@ MFRC522::MIFARE_Key key;
 // Init array that will store new NUID 
 byte nuidPICC[4];
 
+char uidHex[9];  // String to store the hexadecimal UID (8 characters + null terminator)
+
 const byte ROWS = 4; 
 const byte COLS = 3; 
 
@@ -96,7 +98,9 @@ void loop(){
   }
 
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
-      printHex(rfid.uid.uidByte, rfid.uid.size);
+      uidToHexString(rfid.uid.uidByte, rfid.uid.size, uidHex, sizeof(uidHex));
+
+      transferString("UID", String(uidHex));
   }
 
   // Halt PICC
@@ -129,6 +133,19 @@ void printHex(byte *buffer, byte bufferSize) {
     Serial.print(buffer[i], HEX);
   }
   Serial.println();
+}
+
+void uidToHexString(byte* uidBytes, byte uidSize, char* hexString, size_t hexStringSize) {
+    if (hexStringSize < (2 * uidSize + 1)) {
+        // Not enough space in the hexString buffer
+        return;  // Or handle the error accordingly
+    }
+
+    for (byte i = 0; i < uidSize; i++) {
+        sprintf(&hexString[i * 2], "%02X", uidBytes[i]);
+    }
+
+    hexString[2 * uidSize] = '\0';  // Null terminate the string
 }
 
 void printBon(String datum, String bedrag, String rekening, String transactie, String briefjes){
