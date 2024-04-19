@@ -33,8 +33,7 @@ document.querySelector("#start").addEventListener("click", () => {
         if(data.type == "REDIRECT") {
             switch(data.data) {
                 case "SCAN_CARD":
-                    deactivate_page(pages.PINCODE);
-                    deactivate_page(pages.OPTIONS);
+                    deactivateAllPages();
                     activate_page(pages.SCAN_CARD);
                     CLIENT_STATE="SCAN_CARD";
                     break;
@@ -47,13 +46,7 @@ document.querySelector("#start").addEventListener("click", () => {
                     document.querySelector("#pincode-placeholder").value = "";
                     document.querySelector("#cash-placeholder").value = "€";
 
-                    deactivate_page(pages.PINCODE);
-                    deactivate_page(pages.GET_INFO);
-                    deactivate_page(pages.GELD_OPNEMEN);
-                    deactivate_page(pages.RECEIPT_OPTION);
-                    deactivate_page(pages.TRANSACTION);
-                    deactivate_page(pages.RECEIPT_WAIT);
-                    deactivate_page(pages.SNELPINNEN);
+                    deactivateAllPages();
                     activate_page(pages.OPTIONS);
 
                     if(CLIENT_STATE == "TRANSACTION") {
@@ -184,7 +177,15 @@ document.querySelector("#start").addEventListener("click", () => {
                         title: "Invalid amount",
                         text: "An invalid amount was given!",
                         icon: "error"
-                    })
+                    });
+                    break;
+                case "SESSION_EXPIRED":
+                    Swal.fire({
+                        title: "Session expired",
+                        text: "Your session is expired!",
+                        icon: "error"
+                    });
+                    break;
             }
         } else if(data.type == "SUCCESS") {
             switch(data.data) {
@@ -300,13 +301,13 @@ document.querySelector("#start").addEventListener("click", () => {
 
                 let dateTime = new Date(row.Date);
                 let formattedDateTime = new Intl.DateTimeFormat('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false,
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
                 }).format(dateTime);
 
                 let transactionDate = document.createElement("p");
@@ -445,6 +446,12 @@ function debug(page) {
         } else {
             activate_page(value);
         }
+    }
+}
+
+function deactivateAllPages() {
+    for(const [key, value] of Object.entries(pages)) {
+        deactivate_page(value);
     }
 }
 

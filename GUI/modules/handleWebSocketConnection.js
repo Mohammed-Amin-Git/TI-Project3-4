@@ -8,10 +8,13 @@ const port = new SerialPort({ path: process.env.SERIAL_PORT, baudRate: 9600 });
 const parser = port.pipe(new ReadlineParser());
 
 export const bills = [5, 10, 50];
+export const SESSION_TIME = 5000; // 5 min
 
 export let GLOBAL = {
     CLIENT_STATE: "NULL",
     PREVIOUS_MONEY_METHOD: "NULL",
+
+    SESSION_CONTAINER: null,
 
     global_uid: null,
     user_id: null,

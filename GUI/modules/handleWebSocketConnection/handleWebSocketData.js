@@ -1,6 +1,6 @@
 import { cashCombinationArrayToString, findCashCombinations } from "./cashModules/cashCombination.js";
 import { db } from "./databaseConnectionModule/createDBConnectionViaSSH.js";
-import { bills, GLOBAL } from "../handleWebSocketConnection.js";
+import { bills, GLOBAL, SESSION_TIME } from "../handleWebSocketConnection.js";
 import moment from 'moment';
 import { validateIncomingAmount } from "./cashModules/validateIncomingAmount.js";
 
@@ -13,6 +13,8 @@ export function handleWebSocketData(ws, data, port) {
             "type": "REDIRECT",
             "data": "SCAN_CARD"
           }));
+
+          clearTimeout(GLOBAL.SESSION_CONTAINER);
 
           GLOBAL.user_id = null;
           GLOBAL.CLIENT_STATE = "SCAN_CARD";
@@ -139,6 +141,7 @@ export function handleWebSocketData(ws, data, port) {
             "data": "DISPENSE_WAIT"
           }));
           
+          clearTimeout(GLOBAL.SESSION_CONTAINER);
           GLOBAL.CLIENT_STATE = "DISPENSE_WAIT";
           break;
         case "PRINT_RECEIPT":
@@ -168,6 +171,21 @@ export function handleWebSocketData(ws, data, port) {
               "type": "REDIRECT",
               "data": "OPTIONS"
             }));
+
+            GLOBAL.SESSION_CONTAINER = setTimeout(() => {
+              ws.send(JSON.stringify({
+                  "type": "REDIRECT",
+                  "data": "SCAN_CARD"
+              }));
+
+              ws.send(JSON.stringify({
+                  "type": "ERROR",
+                  "data": "SESSION_EXPIRED" 
+              }));
+
+              GLOBAL.user_id = null;
+              GLOBAL.CLIENT_STATE = "SCAN_CARD";
+            }, SESSION_TIME);
 
             GLOBAL.CLIENT_STATE = "OPTIONS";
           }

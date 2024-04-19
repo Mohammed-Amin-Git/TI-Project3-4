@@ -1,7 +1,7 @@
 import { handleGeldOpnemen } from "./handleSerialConnection/handleGeldOpnemen.js";
 import { handleIncomingUID } from "./handleSerialConnection/handleIncomingUID.js";
 import { handlePincodeData } from "./handleSerialConnection/handlePincodeData.js";
-import { GLOBAL } from "../handleWebSocketConnection.js";
+import { GLOBAL, SESSION_TIME } from "../handleWebSocketConnection.js";
 
 export function handleSerialConnection(ws, data, port) {
         console.log(data);
@@ -51,6 +51,20 @@ export function handleSerialConnection(ws, data, port) {
                   "data": "OPTIONS"
                 }));
 
+                GLOBAL.SESSION_CONTAINER = setTimeout(() => {
+                  ws.send(JSON.stringify({
+                      "type": "REDIRECT",
+                      "data": "SCAN_CARD"
+                  }));
+
+                  ws.send(JSON.stringify({
+                      "type": "ERROR",
+                      "data": "SESSION_EXPIRED" 
+                  }));
+
+                  GLOBAL.user_id = null;
+                  GLOBAL.CLIENT_STATE = "SCAN_CARD";
+                }, SESSION_TIME);
                 GLOBAL.CLIENT_STATE = "OPTIONS";
               }
               break;

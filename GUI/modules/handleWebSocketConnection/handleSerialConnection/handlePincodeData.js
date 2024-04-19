@@ -1,5 +1,5 @@
 import { db } from "../databaseConnectionModule/createDBConnectionViaSSH.js";
-import { GLOBAL } from "../../handleWebSocketConnection.js";
+import { GLOBAL, SESSION_TIME } from "../../handleWebSocketConnection.js";
 
 export function handlePincodeData(ws, pincodeCharacter) {
     switch(pincodeCharacter) {
@@ -63,7 +63,22 @@ export function handlePincodeData(ws, pincodeCharacter) {
 
                     GLOBAL.user_id = rows[0].Customer_ID;
                     
-                    GLOBAL.CLIENT_STATE = "OPTIONS"
+                    GLOBAL.CLIENT_STATE = "OPTIONS";
+
+                    GLOBAL.SESSION_CONTAINER = setTimeout(() => {
+                        ws.send(JSON.stringify({
+                            "type": "REDIRECT",
+                            "data": "SCAN_CARD"
+                        }));
+
+                        ws.send(JSON.stringify({
+                            "type": "ERROR",
+                            "data": "SESSION_EXPIRED" 
+                        }));
+
+                        GLOBAL.user_id = null;
+                        GLOBAL.CLIENT_STATE = "SCAN_CARD";
+                    }, SESSION_TIME);
                 }
 
                 GLOBAL.pincode_error_count = 0;
