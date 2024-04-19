@@ -1,5 +1,5 @@
-import { db } from "./createDBConnectionViaSSH.js";
-import { global_vars } from "./handleWebSocketConnection.js";
+import { db } from "../databaseConnectionModule/createDBConnectionViaSSH.js";
+import { GLOBAL } from "../../handleWebSocketConnection.js";
 
 export function handleIncomingUID(ws, uid) {
     // Looking if the scanned UID is in the database
@@ -9,7 +9,7 @@ export function handleIncomingUID(ws, uid) {
             "type": "ERROR",
             "data": "SCAN_CARD_NOT_EXIST"
           }));
-          global_vars.CLIENT_STATE = "SCAN_CARD";
+          GLOBAL.CLIENT_STATE = "SCAN_CARD";
 
         } else {
             // Checking if the card is blocked
@@ -25,7 +25,7 @@ export function handleIncomingUID(ws, uid) {
                 "data": "PINCODE"
                 }));
 
-                global_vars.CLIENT_STATE = "PINCODE";
+                GLOBAL.CLIENT_STATE = "PINCODE";
             }
         }
     });

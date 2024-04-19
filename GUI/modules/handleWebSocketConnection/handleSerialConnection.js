@@ -1,7 +1,7 @@
-import { handleGeldOpnemen } from "./handleGeldOpnemen.js";
-import { handleIncomingUID } from "./handleIncomingUID.js";
-import { handlePincodeData } from "./handlePincodeData.js";
-import { global_vars } from "./handleWebSocketConnection.js";
+import { handleGeldOpnemen } from "./handleSerialConnection/handleGeldOpnemen.js";
+import { handleIncomingUID } from "./handleSerialConnection/handleIncomingUID.js";
+import { handlePincodeData } from "./handleSerialConnection/handlePincodeData.js";
+import { GLOBAL } from "../handleWebSocketConnection.js";
 
 export function handleSerialConnection(ws, data, port) {
         console.log(data);
@@ -11,9 +11,9 @@ export function handleSerialConnection(ws, data, port) {
         // Selecting which type of data to handle
         switch(dataObj.type) {
           case "UID":
-            if(global_vars.CLIENT_STATE == "SCAN_CARD") {
+            if(GLOBAL.CLIENT_STATE == "SCAN_CARD") {
               let uid = dataObj.data.trim();
-              global_vars.global_uid = uid;
+              GLOBAL.global_uid = uid;
   
               handleIncomingUID(ws, uid);
             }
@@ -21,10 +21,10 @@ export function handleSerialConnection(ws, data, port) {
           case "KEYPAD":
               let keypadCharacter = String.fromCharCode(dataObj.data);
               
-              if(global_vars.CLIENT_STATE == "PINCODE") {
+              if(GLOBAL.CLIENT_STATE == "PINCODE") {
                 handlePincodeData(ws, keypadCharacter); // Handle PINCODE data
 
-              } else if(global_vars.CLIENT_STATE == "GELD_OPNEMEN") { // Handle GELD_OPNEMEN data
+              } else if(GLOBAL.CLIENT_STATE == "GELD_OPNEMEN") { // Handle GELD_OPNEMEN data
                 handleGeldOpnemen(ws, keypadCharacter);
 
               }
@@ -41,7 +41,7 @@ export function handleSerialConnection(ws, data, port) {
                     "data": "RECEIPT_OPTION"
                   }));
                   
-                  global_vars.CLIENT_STATE = "RECEIPT_OPTION";
+                  GLOBAL.CLIENT_STATE = "RECEIPT_OPTION";
                 }
               break;
           case "RECEIPT_STATUS":
@@ -51,7 +51,7 @@ export function handleSerialConnection(ws, data, port) {
                   "data": "OPTIONS"
                 }));
 
-                global_vars.CLIENT_STATE = "OPTIONS";
+                GLOBAL.CLIENT_STATE = "OPTIONS";
               }
               break;
           case "RECEIPT_RESEND":

@@ -1,5 +1,5 @@
-import { db } from "./createDBConnectionViaSSH.js";
-import { global_vars } from "./handleWebSocketConnection.js";
+import { db } from "../databaseConnectionModule/createDBConnectionViaSSH.js";
+import { GLOBAL } from "../../handleWebSocketConnection.js";
 
 export function handlePincodeData(ws, pincodeCharacter) {
     switch(pincodeCharacter) {
@@ -9,31 +9,31 @@ export function handlePincodeData(ws, pincodeCharacter) {
                 "data": "#"
               }));
       
-              if(global_vars.pincode_count > 0) {
-                global_vars.pincode_count--;
-                global_vars.pincode_input = global_vars.pincode_input.substring(0, global_vars.pincode_input.length-1);
+              if(GLOBAL.pincode_count > 0) {
+                GLOBAL.pincode_count--;
+                GLOBAL.pincode_input = GLOBAL.pincode_input.substring(0, GLOBAL.pincode_input.length-1);
               }
             break;
         case '*':
-            global_vars.CLIENT_STATE = "OPTIONS";
-            global_vars.pincode_count = 0;
+            GLOBAL.CLIENT_STATE = "OPTIONS";
+            GLOBAL.pincode_count = 0;
 
             // Looking for a match in the database
-            db.query("SELECT Customer_ID, Pincode, Card_blocked FROM Customer WHERE Pass_number = ? AND Pincode = ?", [global_vars.global_uid, parseInt(global_vars.pincode_input)])
+            db.query("SELECT Customer_ID, Pincode, Card_blocked FROM Customer WHERE Pass_number = ? AND Pincode = ?", [GLOBAL.global_uid, parseInt(GLOBAL.pincode_input)])
             .then(([rows, fields]) => {
                 // No match found
                 if(rows.length == 0) {
-                global_vars.pincode_error_count++;
-                global_vars.CLIENT_STATE = "PINCODE";
+                GLOBAL.pincode_error_count++;
+                GLOBAL.CLIENT_STATE = "PINCODE";
 
                 ws.send(JSON.stringify({
                     "type": "ERROR",
                     "data": "PINCODE_INCORRECT",
-                    "count": 3-global_vars.pincode_error_count
+                    "count": 3-GLOBAL.pincode_error_count
                 }));
 
-                if(global_vars.pincode_error_count >= 3) {
-                    db.query("UPDATE Customer SET Card_blocked = TRUE WHERE Pass_number = ?", [global_vars.global_uid]);
+                if(GLOBAL.pincode_error_count >= 3) {
+                    db.query("UPDATE Customer SET Card_blocked = TRUE WHERE Pass_number = ?", [GLOBAL.global_uid]);
 
                     ws.send(JSON.stringify({
                     "type": "REDIRECT",
@@ -45,7 +45,7 @@ export function handlePincodeData(ws, pincodeCharacter) {
                     "data": "CARD_BLOCKED"
                     }));
 
-                    global_vars.CLIENT_STATE = "SCAN_CARD";
+                    GLOBAL.CLIENT_STATE = "SCAN_CARD";
                 }
                 } else {
                 // Checking if the card is blocked
@@ -61,26 +61,26 @@ export function handlePincodeData(ws, pincodeCharacter) {
                     "data": "OPTIONS"
                     }));
 
-                    global_vars.user_id = rows[0].Customer_ID;
+                    GLOBAL.user_id = rows[0].Customer_ID;
                     
-                    global_vars.CLIENT_STATE = "OPTIONS"
+                    GLOBAL.CLIENT_STATE = "OPTIONS"
                 }
 
-                global_vars.pincode_error_count = 0;
+                GLOBAL.pincode_error_count = 0;
                 }
             });
 
-            global_vars.pincode_input = "";
+            GLOBAL.pincode_input = "";
             break;
         default:
-            if(global_vars.pincode_count < 4) {
+            if(GLOBAL.pincode_count < 4) {
                 // Sending pincode number to client
                 ws.send(JSON.stringify({
                     "type": "PINCODE",
                     "data": "*"
                 }));
-                global_vars.pincode_count++;
-                global_vars.pincode_input += pincodeCharacter;
+                GLOBAL.pincode_count++;
+                GLOBAL.pincode_input += pincodeCharacter;
             }
     }
 }

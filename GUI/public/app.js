@@ -11,11 +11,12 @@ const pages = {
     DISPENSE_WAIT: "#dispense-wait-page",
     RECEIPT_OPTION: "#receipt-option-page",
     TRANSACTION: "#transaction-page",
-    RECEIPT_WAIT: "#receipt-wait-page"
+    RECEIPT_WAIT: "#receipt-wait-page",
+    SNELPINNEN: "#snelpinnen-page"
 };
 
 // DEBUG MODE
-//debug(pages.RECEIPT_WAIT);
+//debug(pages.SNELPINNEN);
 
 document.querySelector("#start").addEventListener("click", () => {
     deactivate_page(pages.CONNECT)
@@ -52,6 +53,7 @@ document.querySelector("#start").addEventListener("click", () => {
                     deactivate_page(pages.RECEIPT_OPTION);
                     deactivate_page(pages.TRANSACTION);
                     deactivate_page(pages.RECEIPT_WAIT);
+                    deactivate_page(pages.SNELPINNEN);
                     activate_page(pages.OPTIONS);
 
                     if(CLIENT_STATE == "TRANSACTION") {
@@ -86,6 +88,7 @@ document.querySelector("#start").addEventListener("click", () => {
                     document.querySelector("#cash-placeholder").innerHTML = "€";
 
                     deactivate_page(pages.GELD_OPNEMEN);
+                    deactivate_page(pages.SNELPINNEN);
                     activate_page(pages.CASH_COMBINATION);
 
                     socket.send(JSON.stringify({
@@ -120,6 +123,12 @@ document.querySelector("#start").addEventListener("click", () => {
                     deactivate_page(pages.RECEIPT_OPTION);
                     activate_page(pages.RECEIPT_WAIT);
                     CLIENT_STATE = "RECEIPT_WAIT";
+                    break;
+                case "SNELPINNEN":
+                    deactivate_page(pages.OPTIONS);
+                    deactivate_page(pages.CASH_COMBINATION);
+                    activate_page(pages.SNELPINNEN);
+                    CLIENT_STATE = "SNELPINNEN";
                     break;
             }
         } else if(data.type == "ERROR") {
@@ -369,6 +378,44 @@ document.querySelector("#start").addEventListener("click", () => {
     document.querySelector("#transaction-btn").addEventListener('click', () => {
         socket.send(JSON.stringify({
             "type": "TRANSACTION"
+        }));
+    });
+
+    document.querySelector("#snelpinnen-btn").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SNELPINNEN"
+        }));
+    });
+
+    // Handle snelpinnen buttons
+    document.querySelector("#btn-10-euro").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SELECT_SNELPINNEN",
+            "amount": 10
+        }));
+    });
+    document.querySelector("#btn-20-euro").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SELECT_SNELPINNEN",
+            "amount": 20
+        }));
+    });
+    document.querySelector("#btn-50-euro").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SELECT_SNELPINNEN",
+            "amount": 50
+        }));
+    });
+    document.querySelector("#btn-70-euro").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SELECT_SNELPINNEN",
+            "amount": 70
+        }));
+    });
+    document.querySelector("#btn-100-euro").addEventListener('click', () => {
+        socket.send(JSON.stringify({
+            "type": "SELECT_SNELPINNEN",
+            "amount": 100
         }));
     });
 });

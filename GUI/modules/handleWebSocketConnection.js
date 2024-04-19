@@ -1,7 +1,7 @@
 import { ReadlineParser } from '@serialport/parser-readline';
 import { SerialPort } from 'serialport';
-import { handleSerialConnection } from "./handleSerialConnection.js";
-import { handleWebSocketData } from "./handleWebSocketData.js";
+import { handleSerialConnection } from "./handleWebSocketConnection/handleSerialConnection.js";
+import { handleWebSocketData } from "./handleWebSocketConnection/handleWebSocketData.js";
 
 // SerialPort Config
 const port = new SerialPort({ path: process.env.SERIAL_PORT, baudRate: 9600 });
@@ -9,8 +9,9 @@ const parser = port.pipe(new ReadlineParser());
 
 export const bills = [5, 10, 50];
 
-export let global_vars = {
+export let GLOBAL = {
     CLIENT_STATE: "NULL",
+    PREVIOUS_MONEY_METHOD: "NULL",
 
     global_uid: null,
     user_id: null,
@@ -32,7 +33,7 @@ export let global_vars = {
 export function handleWebSocketConnection(ws) {
     console.log("Client connection established!");
 
-    global_vars.CLIENT_STATE = "SCAN_CARD";
+    GLOBAL.CLIENT_STATE = "SCAN_CARD";
 
     // Handle Incoming Serial data
     parser.on('data', data => {
