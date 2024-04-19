@@ -72,7 +72,6 @@ document.querySelector("#start").addEventListener("click", () => {
                     break;
                 case "GELD_OPNEMEN":
                     document.querySelector("#cash-placeholder").value = "€";
-                    console.log("Resetting cash placeholder")
 
                     if(CLIENT_STATE == "CASH_COMBINATION") {
                         resetCashCombinationButtons();
@@ -125,6 +124,10 @@ document.querySelector("#start").addEventListener("click", () => {
                     CLIENT_STATE = "RECEIPT_WAIT";
                     break;
                 case "SNELPINNEN":
+                    if(CLIENT_STATE == "CASH_COMBINATION") {
+                        resetCashCombinationButtons();
+                    }
+
                     deactivate_page(pages.OPTIONS);
                     deactivate_page(pages.CASH_COMBINATION);
                     activate_page(pages.SNELPINNEN);
@@ -173,6 +176,13 @@ document.querySelector("#start").addEventListener("click", () => {
                     Swal.fire({
                         title: "Low balance",
                         text: "Your balance is too low for this withdrawal",
+                        icon: "error"
+                    });
+                    break;
+                case "INVALID_QUICK_PIN":
+                    Swal.fire({
+                        title: "Invalid amount",
+                        text: "An invalid amount was given!",
                         icon: "error"
                     })
             }

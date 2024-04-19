@@ -1,7 +1,8 @@
-import { cashCombinationArrayToString, findCashCombinations } from "./cashCombinationModule/cashCombination.js";
+import { cashCombinationArrayToString, findCashCombinations } from "./cashModules/cashCombination.js";
 import { db } from "./databaseConnectionModule/createDBConnectionViaSSH.js";
 import { bills, GLOBAL } from "../handleWebSocketConnection.js";
 import moment from 'moment';
+import { validateIncomingAmount } from "./cashModules/validateIncomingAmount.js";
 
 export function handleWebSocketData(ws, data, port) {
       let json_data = JSON.parse(data);
@@ -199,7 +200,10 @@ export function handleWebSocketData(ws, data, port) {
         case "SELECT_SNELPINNEN":
           let allowed_snelpinnen = [10, 20, 50, 70, 100];
           if(!allowed_snelpinnen.includes(json_data.amount)) {
-            // TODO: Handle invalid amounts
+            ws.send(JSON.stringify({
+              "type": "ERROR",
+              "data": "INVALID_QUICK_PIN"
+            }));
           } else {
             GLOBAL.cash_input = json_data.amount;
 
