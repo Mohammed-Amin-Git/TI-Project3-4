@@ -2,6 +2,8 @@ import { handleGeldOpnemen } from "./handleSerialConnection/handleGeldOpnemen.js
 import { handleIncomingUID } from "./handleSerialConnection/handleIncomingUID.js";
 import { handlePincodeData } from "./handleSerialConnection/handlePincodeData.js";
 import { GLOBAL, SESSION_TIME } from "../handleWebSocketConnection.js";
+import { db } from "./databaseConnectionModule/createDBConnectionViaSSH.js";
+import { obfuscateIBAN } from "./cashModules/cashCombination.js";
 
 export function handleSerialConnection(ws, data, port) {
         console.log(data);
@@ -68,8 +70,5 @@ export function handleSerialConnection(ws, data, port) {
                 GLOBAL.CLIENT_STATE = "OPTIONS";
               }
               break;
-          case "RECEIPT_RESEND":
-            port.write(dataObj.data);
-            break;
           }
 }

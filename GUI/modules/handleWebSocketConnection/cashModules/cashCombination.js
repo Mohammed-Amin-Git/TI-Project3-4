@@ -1,6 +1,8 @@
 export function findCashCombinations(amount, bills) {
     // Sort bills array in descending order
     bills.sort((a, b) => b - a);
+
+    // TODO: Get available bills
     
     // Initialize array to store combinations
     let combinations = new Array(amount + 1).fill(null).map(() => []);
@@ -12,11 +14,14 @@ export function findCashCombinations(amount, bills) {
     for (let bill of bills) {
       for (let i = bill; i <= amount; i++) {
         for (let combination of combinations[i - bill]) {
+          // TODO: Check if combination is possible with availble bills
           combinations[i].push([...combination, bill]);
         }
       }
     }
   
+    // TODO: Check if combination length is 0, then send error back
+
     // Return the total combinations and the actual combinations
     return { count: combinations[amount].length, combinations: combinations[amount] };
 }
@@ -52,4 +57,17 @@ export function cashCombinationArrayToString(combination_array) {
   }
 
   return output_arr.join(" + ");
+}
+
+export function obfuscateIBAN(iban) {
+  let obfuscated_iban = "";
+  for(let i=0; i<iban.length; i++) {
+      if(i > 8 && i <= 19) {
+        obfuscated_iban += "*";
+      } else {
+        obfuscated_iban += iban[i];
+      }
+  }
+
+  return obfuscated_iban;
 }

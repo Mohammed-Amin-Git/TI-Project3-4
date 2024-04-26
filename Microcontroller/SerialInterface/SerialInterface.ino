@@ -11,9 +11,6 @@
 SoftwareSerial mySerial(RX_PIN, TX_PIN); // Declare SoftwareSerial obj first
 Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
 
-StaticJsonDocument<200> docRx;
-StaticJsonDocument<200> docTx;
-
 #define CASH_DISPENSE_DELAY 1200
 
 #define SS_PIN 10
@@ -59,11 +56,16 @@ void setup(){
   
 void loop(){
   if(Serial.available() > 0) {
+    StaticJsonDocument<200> docRx;
     String data = Serial.readStringUntil('\n');
     DeserializationError error = deserializeJson(docRx, data);
     String receive_type = docRx["type"];
 
-    Serial.println(data);
+    if(error) {
+      Serial.println(error.c_str());
+    } else {
+      Serial.println(data);
+    }
 
     if(receive_type == "DISPENSE_CASH") {
       JsonArray cash_combination = docRx["cash_combination"].as<JsonArray>(); // Array that contains the pill to dispense
@@ -82,12 +84,8 @@ void loop(){
       String iban = docRx["iban"];
       String transaction_id = docRx["transaction_id"];
 
-      if(iban == "") {
-        transferString("RECEIPT_RESEND", data);
-      } else {
-        printBon(date, amount, iban, transaction_id, combination);
-        transferString("RECEIPT_STATUS", "SUCCESS"); 
-      }
+      printBon(date, amount, iban, transaction_id, combination);
+      transferString("RECEIPT_STATUS", "SUCCESS"); 
     }
   }
 
@@ -112,6 +110,7 @@ void loop(){
 }
 
 void transferNumber(String type, int num) {
+  StaticJsonDocument<200> docTx;
   docTx["type"] = type;
   docTx["data"] = num;
 
@@ -120,6 +119,7 @@ void transferNumber(String type, int num) {
 }
 
 void transferString(String type, String data) {
+  StaticJsonDocument<200> docTx;
   docTx["type"] = type;
   docTx["data"] = data;
 

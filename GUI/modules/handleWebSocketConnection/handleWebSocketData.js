@@ -1,8 +1,7 @@
-import { cashCombinationArrayToString, findCashCombinations } from "./cashModules/cashCombination.js";
+import { cashCombinationArrayToString, findCashCombinations, obfuscateIBAN } from "./cashModules/cashCombination.js";
 import { db } from "./databaseConnectionModule/createDBConnectionViaSSH.js";
 import { bills, GLOBAL, SESSION_TIME } from "../handleWebSocketConnection.js";
 import moment from 'moment';
-import { validateIncomingAmount } from "./cashModules/validateIncomingAmount.js";
 
 export function handleWebSocketData(ws, data, port) {
       let json_data = JSON.parse(data);
@@ -153,7 +152,7 @@ export function handleWebSocketData(ws, data, port) {
                 "date": GLOBAL.global_current_date,
                 "amount": GLOBAL.cash_amount.toString(),
                 "combination": cashCombinationArrayToString(GLOBAL.cash_combination),
-                "iban": rows[0].IBAN, // TODO: Obfuscate IBAN before sending to the microcontroller
+                "iban": obfuscateIBAN(rows[0].IBAN),
                 "transaction_id": rows[0].Transcation_ID.toString()
               });
 
