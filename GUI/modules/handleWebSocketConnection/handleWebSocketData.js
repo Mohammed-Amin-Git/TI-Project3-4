@@ -222,14 +222,22 @@ export function handleWebSocketData(ws, data, port) {
               "data": "INVALID_QUICK_PIN"
             }));
           } else {
-            GLOBAL.cash_input = json_data.amount;
-
-            ws.send(JSON.stringify({
-              "type": "REDIRECT",
-              "data": "CASH_COMBINATION"
-            }));
-
-            GLOBAL.CLIENT_STATE = "CASH_COMBINATION";
+            db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [GLOBAL.user_id]).then(([rows, fields]) => {
+                if(rows[0].Balance < parseInt(json_data.amount)) {
+                  ws.send(JSON.stringify({
+                    "type": "ERROR",
+                    "data": "LOW_BALANCE"
+                  }));
+                } else {
+                  ws.send(JSON.stringify({
+                    "type": "REDIRECT",
+                    "data": "CASH_COMBINATION"
+                  }));
+      
+                  GLOBAL.CLIENT_STATE = "CASH_COMBINATION";
+                  GLOBAL.cash_input = json_data.amount;
+                }
+            });
           }
           break;
       }
