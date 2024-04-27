@@ -1,4 +1,4 @@
-import { cashCombinationArrayToString, findCashCombinations, obfuscateIBAN } from "./cashModules/cashCombination.js";
+import { cashCombinationArrayToString, countNumber, findCashCombinations, obfuscateIBAN } from "./cashModules/cashCombination.js";
 import { db } from "./databaseConnectionModule/createDBConnectionViaSSH.js";
 import { bills, GLOBAL, SESSION_TIME } from "../handleWebSocketConnection.js";
 import moment from 'moment';
@@ -95,21 +95,43 @@ export function handleWebSocketData(ws, data, port) {
           GLOBAL.PREVIOUS_MONEY_METHOD = "GELD_OPNEMEN";
           break;
         case "GET_COMBINATIONS":
-          let combinations = findCashCombinations(parseInt(GLOBAL.cash_input), bills).combinations;
-          combinations.sort((a,b) => a.length - b.length); // Sorting the combinations by array length ascending
-          if(combinations.length > 3) {
-            combinations = combinations.slice(0, 3);
-          }
+          db.query("SELECT VijfEuro, TienEuro, VijftigEuro FROM ATM WHERE ATM_ID = 1").then(([rows, fields]) => {
+            // Get number of bills in the ATM
+            let vijfEuros = rows[0].VijfEuro;
+            let tienEuros = rows[0].TienEuro;
+            let vijftigEuros = rows[0].VijftigEuro;
 
-          GLOBAL.cash_combinations = combinations;
-          GLOBAL.cash_amount = parseInt(GLOBAL.cash_input);
+            let combinations = findCashCombinations(parseInt(GLOBAL.cash_input), bills, vijfEuros, tienEuros, vijftigEuros).combinations;
+          
+            if(combinations.length > 0) {
+              combinations.sort((a,b) => a.length - b.length); // Sorting the combinations by array length ascending
+              if(combinations.length > 3) {
+                combinations = combinations.slice(0, 3);
+              }
 
-          ws.send(JSON.stringify({
-            "type": "COMBINATIONS",
-            "data": combinations,
-            "amount": GLOBAL.cash_input
-          }));
-        
+              GLOBAL.cash_combinations = combinations;
+              GLOBAL.cash_amount = parseInt(GLOBAL.cash_input);
+
+              ws.send(JSON.stringify({
+                "type": "COMBINATIONS",
+                "data": combinations,
+                "amount": GLOBAL.cash_input
+              }));
+            } else {
+              ws.send(JSON.stringify({
+                  "type": "ERROR",
+                  "data": "LOW_ATM_BILLS"
+              }));
+
+              ws.send(JSON.stringify({
+                "type": "REDIRECT",
+                "data": "OPTIONS"
+              }));
+
+              GLOBAL.CLIENT_STATE = "OPTIONS";
+            }
+          });
+
           break;
         case "SELECT_COMBINATION":
           GLOBAL.cash_input = "";
@@ -124,6 +146,14 @@ export function handleWebSocketData(ws, data, port) {
             db.query("UPDATE Customer SET Balance = ? WHERE Customer_ID = ?", [new_balance, GLOBAL.user_id]);
             console.log("Balance updated!");
           });
+
+          // Updating bill amounts in the database
+          let bills5 = countNumber(5, GLOBAL.cash_combination);
+          let bills10 = countNumber(10, GLOBAL.cash_combination);
+          let bills50 = countNumber(50, GLOBAL.cash_combination);
+
+          db.query("UPDATE ATM SET VijfEuro = VijfEuro - ?, TienEuro = TienEuro - ?, VijftigEuro = VijftigEuro - ? WHERE ATM_ID = 1", [bills5, bills10, bills50]);
+          console.log("ATM Updated!");
 
           // Adding transcation to the database
           GLOBAL.global_current_date = moment().format('YYYY-MM-DD hh:mm:ss');

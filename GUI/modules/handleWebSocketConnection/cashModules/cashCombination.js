@@ -1,9 +1,7 @@
-export function findCashCombinations(amount, bills) {
+export function findCashCombinations(amount, bills, vijfEuros, tienEuros, vijftigEuros) {
     // Sort bills array in descending order
     bills.sort((a, b) => b - a);
 
-    // TODO: Get available bills
-    
     // Initialize array to store combinations
     let combinations = new Array(amount + 1).fill(null).map(() => []);
   
@@ -14,16 +12,26 @@ export function findCashCombinations(amount, bills) {
     for (let bill of bills) {
       for (let i = bill; i <= amount; i++) {
         for (let combination of combinations[i - bill]) {
-          // TODO: Check if combination is possible with availble bills
           combinations[i].push([...combination, bill]);
         }
       }
     }
-  
-    // TODO: Check if combination length is 0, then send error back
+      
+    // TODO: Check if combination is possible with availble bills
+    let cashCombinations = [];
+    combinations[amount].forEach(cashCombination => {
+        let count5  = countNumber(5, cashCombination);
+        let count10 = countNumber(10, cashCombination);
+        let count50 = countNumber(50, cashCombination);
 
+        if(count5 <= vijfEuros && count10 <= tienEuros && count50 <= vijftigEuros) {
+            cashCombinations.push(cashCombination);
+        }
+    });
+
+        
     // Return the total combinations and the actual combinations
-    return { count: combinations[amount].length, combinations: combinations[amount] };
+    return { count: combinations[amount].length, combinations: cashCombinations };
 }
 
 export function cashCombinationArrayToString(combination_array) {
@@ -70,4 +78,15 @@ export function obfuscateIBAN(iban) {
   }
 
   return obfuscated_iban;
+}
+
+export function countNumber(num, arr) {
+  let count = 0;
+  arr.forEach(element => {
+      if(element == num) {
+        count++;
+      }
+  });
+  
+  return count;
 }

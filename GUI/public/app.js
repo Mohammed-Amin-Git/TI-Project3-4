@@ -186,6 +186,13 @@ document.querySelector("#start").addEventListener("click", () => {
                         icon: "error"
                     });
                     break;
+                case "LOW_ATM_BILLS":
+                    Swal.fire({
+                        title: "Low ATM bills",
+                        text: "The ATM doesn't have enough bills to fufill this transaction",
+                        icon: "error"
+                    });
+                    break;
             }
         } else if(data.type == "SUCCESS") {
             switch(data.data) {
