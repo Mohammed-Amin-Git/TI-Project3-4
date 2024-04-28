@@ -1,2 +1,5 @@
-# GUI-Project3-4
-This is the github repo for the Graphical User Interface of the ATM.
+# Technische Informatica Project 3/4
+
+👋 Welkom bij de Github repo voor de codebase van project 3/4 voor de opleiding Technische Informatica
+
+
