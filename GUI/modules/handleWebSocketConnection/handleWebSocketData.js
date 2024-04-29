@@ -198,25 +198,15 @@ export function handleWebSocketData(ws, data, port) {
           } else {
             ws.send(JSON.stringify({
               "type": "REDIRECT",
-              "data": "OPTIONS"
+              "data": "SCAN_CARD"
             }));
 
-            GLOBAL.SESSION_CONTAINER = setTimeout(() => {
-              ws.send(JSON.stringify({
-                  "type": "REDIRECT",
-                  "data": "SCAN_CARD"
-              }));
+            ws.send(JSON.stringify({
+              "type": "SUCCESS",
+              "data": "TRANSACTION_SUCCESS"
+            }));
 
-              ws.send(JSON.stringify({
-                  "type": "ERROR",
-                  "data": "SESSION_EXPIRED" 
-              }));
-
-              GLOBAL.user_id = null;
-              GLOBAL.CLIENT_STATE = "SCAN_CARD";
-            }, SESSION_TIME);
-
-            GLOBAL.CLIENT_STATE = "OPTIONS";
+            GLOBAL.CLIENT_STATE = "SCAN_CARD";
           }
           break;
         case "TRANSACTION":

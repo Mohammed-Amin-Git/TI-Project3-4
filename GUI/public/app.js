@@ -196,12 +196,12 @@ document.querySelector("#start").addEventListener("click", () => {
             }
         } else if(data.type == "SUCCESS") {
             switch(data.data) {
-                case "DISPENSE_SUCCESS":
+                case "TRANSACTION_SUCCESS":
                     Swal.fire({
-                        title: "Successfully dispensed money",
-                        text: "The cash dispensing went succesfully",
+                        title: "Dankuwel",
+                        text: "Bedankt voor het pinnen bij Wild West Bank!",
                         icon: "success"
-                    });
+                    })
                     break;
             }
         } else if(data.type == "USER_DATA" && CLIENT_STATE == "OPTIONS") {

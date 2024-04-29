@@ -5,6 +5,7 @@ import 'dotenv/config';
 
 const app = express();
 
+app.use(express.json());
 app.use(cors());
 
 app.get("/api/noob/health", (req, res) => {
@@ -15,10 +16,10 @@ app.get("/api/noob/health", (req, res) => {
 
 let customer_attempts_remaining = {};
 
-app.get("/api/accountinfo", async (req, res) => {
-	let iban = req.query.iban;
-	let pincode = req.query.pincode;
-	let uid = req.query.uid;
+app.post("/api/accountinfo", async (req, res) => {
+	let iban = req.body.target;
+	let pincode = req.body.pincode;
+	let uid = req.body.uid;
 
 	try {
 		if(!validateRequest(iban, pincode, uid)) {
