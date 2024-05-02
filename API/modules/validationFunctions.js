@@ -11,11 +11,24 @@ const db = mysql.createPool({
 });
 
 
-export function validateRequest(iban, pincode, uid) {
-	if(!iban || !pincode || !uid) {
+export function validateRequestAccountInfo(iban, uid) {
+	if(!iban.match(/[A-Z]{2}[0-9]{2}[A-Z]{4}[0-9]{10}/) || !uid.match(/[0-9A-F]{8}/)) {
 		return false;
 	}
-	
+	return true;
+}
+
+export function validateRequestWithdraw(iban, uid, pincode, amount) {
+	if(
+		!iban.match(/[A-Z]{2}[0-9]{2}[A-Z]{4}[0-9]{10}/) ||
+		!uid.match(/[0-9A-F]{8}/) ||
+		!pincode.match(/[0-9]{4}/) ||
+		amount < 5 ||
+		amount > 100 ||
+		amount % 5 != 0
+	) {
+		return false;
+	}
 	return true;
 }
 
