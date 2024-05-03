@@ -131,65 +131,72 @@ document.querySelector("#start").addEventListener("click", () => {
             switch(data.data) {
                 case "SCAN_CARD_NOT_EXIST":
                     Swal.fire({
-                        title: "Invalid card",
-                        text: "Your card is not registered in the database!",
+                        title: "Onbekende kaart",
+                        text: "Uw kaart is niet geregistreerd in de database.",
                         icon: "question"
+                    });
+                    break;
+                case "INVALID_CARD":
+                    Swal.fire({
+                        title: "Ongeldige kaart",
+                        text: "Uw gescande kaart is geen geldige bankpas.",
+                        icon: "warning"
                     });
                     break;
                 case "PINCODE_INCORRECT":
                     Swal.fire({
-                        title: "Incorrect pincode",
-                        text: `${data.count} tries left until you're card will be blocked!`,
+                        title: "Incorrecte pincode",
+                        text: `${data.count} pogingen over, voordat uw kaart wordt geblokkeerd.`,
                         icon: "warning"
                     });
                     document.querySelector("#pincode-placeholder").value = "";    
                     break;
                 case "CARD_BLOCKED":
                     Swal.fire({
-                        title: "Card blocked",
-                        text: "Contact the helpdesk!",
+                        title: "Kaart geblokkeerd",
+                        text: "Neem contact op met de klantenservice om uw kaart te deblokkeren.",
                         icon: "error"
                     });
                     break;
                 case "INVALID_CASH_AMOUNT":
                     Swal.fire({
-                        title: "Invalid amount",
-                        text: "Please enter a cash amount between €5-100",
+                        title: "Ongeldige hoeveelheid",
+                        text: "Geef alstublieft een hoeveelheid op het volgende domein: €5-100",
                         icon: "error"
                     })
                     break;
                 case "INVALID_MULTIPLE":
                     Swal.fire({
-                        title: "Invalid amount",
-                        text: "The specified amount must be a multiple of 5!",
+                        title: "Ongeldige hoeveelheid",
+                        text: "Het ingevoerde hoeveelheid moet een veelvoud van vijf zijn..",
                         icon: "error"
                     })
                     break;
                 case "LOW_BALANCE":
                     Swal.fire({
-                        title: "Low balance",
-                        text: "Your balance is too low for this withdrawal",
+                        title: "Niet genoeg saldo",
+                        text: "U heeft te weinig saldo om de ingevoeerde hoeveelheid te pinnen.",
                         icon: "error"
                     });
                     break;
                 case "INVALID_QUICK_PIN":
                     Swal.fire({
-                        title: "Invalid amount",
-                        text: "An invalid amount was given!",
+                        title: "Ongeldige hoeveelheid",
+                        text: "Een ongeldige hoeveelheid is doorgegeven.",
                         icon: "error"
                     });
                     break;
                 case "SESSION_EXPIRED":
                     Swal.fire({
-                        title: "Session expired",
-                        text: "Your session is expired!",
+                        title: "Sessie verlopen",
+                        text: "Uw sessie is voorlopen.",
                         icon: "error"
                     });
                     break;
                 case "LOW_ATM_BILLS":
                     Swal.fire({
-                        title: "Low ATM bills",
-                        text: "The ATM doesn't have enough bills to fufill this transaction",
+                        title: "Weinig biljetten",
+                        text: "De ATM heeft niet genoeg biljetten om de transactie te vervullen.",
                         icon: "error"
                     });
                     break;

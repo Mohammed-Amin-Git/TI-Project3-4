@@ -17,6 +17,7 @@ export let GLOBAL = {
     SESSION_CONTAINER: null,
 
     global_uid: null,
+    global_iban: null,
     user_id: null,
 
     pincode_count: 0,

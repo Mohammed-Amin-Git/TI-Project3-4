@@ -12,12 +12,15 @@ export function handleSerialConnection(ws, data, port) {
 
         // Selecting which type of data to handle
         switch(dataObj.type) {
-          case "UID":
+          case "CARD_INFO":
             if(GLOBAL.CLIENT_STATE == "SCAN_CARD") {
-              let uid = dataObj.data.trim();
+              let uid = dataObj.uid.trim();
+              let iban = dataObj.iban.trim();
+
               GLOBAL.global_uid = uid;
+              GLOBAL.global_iban = iban;
   
-              handleIncomingUID(ws, uid);
+              handleIncomingUID(ws, uid, iban);
             }
             break;
           case "KEYPAD":
