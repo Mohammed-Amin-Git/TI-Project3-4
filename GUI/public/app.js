@@ -210,7 +210,7 @@ document.querySelector("#start").addEventListener("click", () => {
         } else if(data.type == "GET_INFO" && CLIENT_STATE == "GET_INFO") {
             document.querySelector("#gegevens-id").innerHTML = "ID: " + data.customer_id;
             document.querySelector("#gegevens-naam").innerHTML = "Naam: " + data.name;
-            document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + data.iban;
+            document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + formatIBAN(data.iban);
             document.querySelector("#gegevens-saldo").innerHTML = "Saldo: €" + data.balance;
 
             let dateTime = new Date(data.creation_date);
@@ -468,4 +468,20 @@ function resetCashCombinationButtons() {
         btn.disabled = true;
         btn.style.cursor = "not-allowed";
     }
+}
+
+function formatIBAN(iban) {
+    if(!iban.match(/[A-Z]{2}[0-9]{2}[A-Z]{4}[0-9]{10}/)) {
+        throw new Error("IBAN heeft onjuist formaat!");
+    }
+
+    let formatted_iban = "";
+    for(let i=0; i<iban.length; i++) {
+      formatted_iban += iban[i];
+      if((i + 1) % 4 == 0) {
+        formatted_iban += " ";
+      }
+    }
+
+    return formatted_iban;
 }

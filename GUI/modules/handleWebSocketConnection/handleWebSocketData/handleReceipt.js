@@ -45,7 +45,8 @@ export function handleTransaction(ws) {
 
     GLOBAL.CLIENT_STATE = "TRANSACTION";
 
-    db.query("SELECT Transaction_ID, Date, Transaction_amount FROM Transaction WHERE Customer_ID = ? ORDER BY Transaction_ID DESC", [GLOBAL.user_id]).then(([rows, fields]) => {
+    const SQL = "SELECT Transaction_ID, Date, Transaction_amount FROM Transaction WHERE Customer_ID = ? AND Date >= DATE_SUB(NOW(), INTERVAL 1 WEEK) ORDER BY Transaction_ID DESC";
+    db.query(SQL, [GLOBAL.user_id]).then(([rows, fields]) => {
         ws.send(JSON.stringify({
           "type": "TRANSACTIONS",
           "transactions": rows

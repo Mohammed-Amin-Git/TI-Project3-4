@@ -5,6 +5,9 @@
 #include <Keypad.h>
 #include <SPI.h>
 
+#define SS_PIN 10
+#define RST_PIN 9
+
 #define TX_PIN A0 // Arduino transmit  YELLOW WIRE  labeled RX on printer
 #define RX_PIN A1 // Arduino receive   GREEN WIRE   labeled TX on printer
 
@@ -12,13 +15,11 @@ SoftwareSerial mySerial(RX_PIN, TX_PIN); // Declare SoftwareSerial obj first
 Adafruit_Thermal printer(&mySerial);     // Pass addr to printer constructor
 
 #define CASH_DISPENSE_DELAY 1200
-
-#define SS_PIN 10
-#define RST_PIN 9
  
 MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
 
-MFRC522::MIFARE_Key key; 
+MFRC522::MIFARE_Key key;
+MFRC522::StatusCode status;
 
 // Init array that will store new NUID 
 byte nuidPICC[4];
@@ -95,10 +96,59 @@ void loop(){
     transferNumber("KEYPAD", customKey);
   }
 
+  byte block4;
+  byte block5;
+  byte block_length;
+
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()) {
+      byte buffer1[18];
+      byte buffer2[18];
+      block4 = 4;
+      block5 = 5;
+      block_length = 18;
+      
+      status = rfid.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, 4, &key, &(rfid.uid));
+      if (status != MFRC522::STATUS_OK) {
+        // Serial.print(F("Authentication failed: "));
+        // Serial.println(mfrc522.GetStatusCodeName(status));
+        return;
+      }
+
+      // Reading data from block4
+      status = rfid.MIFARE_Read(block4, buffer1, &block_length);
+      if (status != MFRC522::STATUS_OK) {
+        // Serial.print(F("Reading failed: "));
+        // Serial.println(mfrc522.GetStatusCodeName(status));
+        return;
+      }
+
+      // Reading data from block5
+      status = rfid.MIFARE_Read(block5, buffer2, &block_length);
+      if (status != MFRC522::STATUS_OK) {
+        // Serial.print(F("Reading failed: "));
+        // Serial.println(mfrc522.GetStatusCodeName(status));
+        return;
+      }
+
+      String iban_first_part;
+      for (byte i = 0; i < 16; i++) {
+        if(buffer1[i] != NULL) {
+            iban_first_part += (char) buffer1[i];
+        }
+      }
+
+      String iban_second_part;
+      for (byte i = 0; i < 16; i++) {
+        if(buffer2[i] != NULL) {
+            iban_second_part += (char) buffer2[i];
+        }
+      }
+
+      String iban = iban_first_part + iban_second_part;
+
       uidToHexString(rfid.uid.uidByte, rfid.uid.size, uidHex, sizeof(uidHex));
 
-      transferString("UID", String(uidHex));
+      transferCardInfo("CARD_INFO", String(uidHex), iban);
   }
 
   // Halt PICC
@@ -122,6 +172,16 @@ void transferString(String type, String data) {
   StaticJsonDocument<200> docTx;
   docTx["type"] = type;
   docTx["data"] = data;
+
+  serializeJson(docTx, Serial);
+  Serial.println();
+}
+
+void transferCardInfo(String type, String uid, String iban) {
+  StaticJsonDocument<200> docTx;
+  docTx["type"] = type;
+  docTx["uid"] = uid;
+  docTx["iban"] = iban;
 
   serializeJson(docTx, Serial);
   Serial.println();

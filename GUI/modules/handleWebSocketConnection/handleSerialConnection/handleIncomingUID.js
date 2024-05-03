@@ -7,8 +7,7 @@ export function handleIncomingUID(ws, uid) {
     db.query("SELECT Customer_ID, Card_blocked FROM Customer WHERE Pass_number = ?", [uid]).then(([rows, fields]) => {
         if(rows.length == 0) {
 
-          // TODO: Check if the IBAN is available at another bank
-          // TODO: Set NOOB flag
+          // TODO: Check if the IBAN is available at another bank, then set NOOB flag
           ws.send(JSON.stringify({
             "type": "ERROR",
             "data": "SCAN_CARD_NOT_EXIST"
