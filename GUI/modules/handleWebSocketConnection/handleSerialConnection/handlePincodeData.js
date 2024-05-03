@@ -15,7 +15,10 @@ export function handlePincodeData(ws, pincodeCharacter) {
               }
             break;
         case '*':
-            GLOBAL.CLIENT_STATE = "OPTIONS";
+            if(GLOBAL.pincode_input.length <= 0) {
+                return;
+            }
+
             GLOBAL.pincode_count = 0;
 
             // Looking for a match in the database

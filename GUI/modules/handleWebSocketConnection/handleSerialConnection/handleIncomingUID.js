@@ -1,10 +1,14 @@
 import { db } from "../databaseConnectionModule/createDBConnectionViaSSH.js";
 import { GLOBAL } from "../../handleWebSocketConnection.js";
 
+// TODO: function handleIncomingUID should take a third parameter: IBAN
 export function handleIncomingUID(ws, uid) {
     // Looking if the scanned UID is in the database
     db.query("SELECT Customer_ID, Card_blocked FROM Customer WHERE Pass_number = ?", [uid]).then(([rows, fields]) => {
         if(rows.length == 0) {
+
+          // TODO: Check if the IBAN is available at another bank
+          // TODO: Set NOOB flag
           ws.send(JSON.stringify({
             "type": "ERROR",
             "data": "SCAN_CARD_NOT_EXIST"

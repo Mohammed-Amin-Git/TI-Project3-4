@@ -17,7 +17,7 @@ export function findCashCombinations(amount, bills, vijfEuros, tienEuros, vijfti
       }
     }
       
-    // TODO: Check if combination is possible with availble bills
+    // Check if combination is possible with availble bills
     let cashCombinations = [];
     combinations[amount].forEach(cashCombination => {
         let count5  = countNumber(5, cashCombination);
@@ -89,4 +89,20 @@ export function countNumber(num, arr) {
   });
   
   return count;
+}
+
+export function formatIBAN(iban) {
+    if(!iban.match(/[A-Z]{2}[0-9]{2}[A-Z]{4}[0-9]{10}/)) {
+        throw new Error("IBAN heeft onjuist formaat!");
+    }
+
+    let formatted_iban = "";
+    for(let i=0; i<iban.length; i++) {
+      formatted_iban += iban[i];
+      if((i + 1) % 4 == 0) {
+        formatted_iban += " ";
+      }
+    }
+
+    return formatted_iban;
 }
