@@ -37,8 +37,10 @@ app.post("/api/accountinfo", async (req, res) => {
 	const pincode = req.body.pincode;
 	const uid = req.body.uid;
 
+	console.log([target, uid, pincode]);
+
 	try {
-		if(!validateRequestAccountInfo(target, uid)) {
+		if(!validateRequestAccountInfo(target, uid, pincode)) {
 			return res.status(400).json({});
 		}
 
@@ -46,6 +48,11 @@ app.post("/api/accountinfo", async (req, res) => {
 		const customer = await getCustomerByIBANandUID(target, uid);
 		if(!customer) {
 			return res.status(404).json({});
+		}
+
+		// Check if an attempts session is created
+		if(!customer_attempts_remaining[uid]) {
+			customer_attempts_remaining[uid] = 4;
 		}
 
 		// Checking if the card of the customer is blocked
@@ -56,22 +63,24 @@ app.post("/api/accountinfo", async (req, res) => {
 		// Checking if the pincode of the customer is correct
 		const customerInfo = await getCustomerInfo(customer.Customer_ID, pincode);
 		if(!customerInfo) {
-			customer_attempts_remaining = updateAttemptsRemaining(customer_attempts_remaining, customer.Customer_ID);
-
-			if(customer_attempts_remaining[customer.Customer_ID] <= 0) {
+			customer_attempts_remaining[uid]--;
+			if(customer_attempts_remaining[uid] <= 0) {
 				blockCardOfCustomer(customer.Customer_ID);
-				customer_attempts_remaining[customer.customer_ID] = 3;
 				return res.status(403).json({});
-			} else {
-				return res.status(401).json({
-					attempts_remaining: customer_attempts_remaining[customer.Customer_ID]
-				});
 			}
+
+			return res.status(401).json({
+				attempts_remaining: customer_attempts_remaining[uid]
+			});
 		}
 
 		// Return user data because authentication was successful
-		customer_attempts_remaining[customer.Customer_ID] = 3;
-		res.status(200).json(customerInfo);
+		customer_attempts_remaining[uid] = 4;
+		res.status(200).json({
+			"firstname": customerInfo.Firstname,
+			"lastname": customerInfo.Lastname,
+			"balance": customerInfo.Balance
+		});
 	} catch(err) {
 		res.status(500).json({});
 		console.error(err.stack);
@@ -95,6 +104,11 @@ app.post("/api/withdraw", async (req, res) => {
 			return res.status(404).json({});
 		}
 
+		// Check if an attempts session is created
+		if(!customer_attempts_remaining[uid]) {
+			customer_attempts_remaining[uid] = 4;
+		}
+
 		// Checking if the card of the customer is blocked
 		if(customer.Card_blocked) {
 			return res.status(403).json({});
@@ -103,20 +117,19 @@ app.post("/api/withdraw", async (req, res) => {
 		// Checking if the pincode of the customer is correct
 		const customerInfo = await getCustomerInfo(customer.Customer_ID, pincode);
 		if(!customerInfo) {
-			customer_attempts_remaining = updateAttemptsRemaining(customer_attempts_remaining, customer.Customer_ID);
-
-			if(customer_attempts_remaining[customer.Customer_ID] <= 0) {
+			customer_attempts_remaining[uid]--;
+			if(customer_attempts_remaining[uid] <= 0) {
 				blockCardOfCustomer(customer.Customer_ID);
 				return res.status(403).json({});
-			} else {
-				return res.status(401).json({
-					attempts_remaining: customer_attempts_remaining[customer.Customer_ID]
-				});
 			}
+
+			return res.status(401).json({
+				attempts_remaining: customer_attempts_remaining[uid]
+			});
 		}
 
 		// Return user data because authentication was successful
-		customer_attempts_remaining[customer.Customer_ID] = 3;
+		customer_attempts_remaining[uid] = 4;
 
 		if(customerInfo.Balance >= amount) {
 			// TODO: Update customer balance
