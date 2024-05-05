@@ -53,7 +53,6 @@ export function handleGetCashCombinations(ws) {
 }
 
 export function handleSelectCashCombinations(ws, port, combination_number) {
-    // TODO: Implement NOOB version
     GLOBAL.cash_input = "";
     GLOBAL.cash_count = 0;
     GLOBAL.cash_combination = GLOBAL.cash_combinations[combination_number];

@@ -9,6 +9,7 @@ export function handleUitloggen(ws) {
     clearTimeout(GLOBAL.SESSION_CONTAINER);
 
     GLOBAL.user_id = null;
+    GLOBAL.NOOB_FLAG = false;
     GLOBAL.CLIENT_STATE = "SCAN_CARD";
 }
 
