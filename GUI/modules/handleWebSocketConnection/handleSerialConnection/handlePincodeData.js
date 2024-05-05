@@ -22,7 +22,8 @@ export async function handlePincodeData(ws, pincodeCharacter) {
             GLOBAL.pincode_count = 0;
 
             if(GLOBAL.NOOB_FLAG) {
-                const response = await NOOBRequest("POST", "accountinfo", GLOBAL.global_iban, {"target": GLOBAL.global_iban, "uid": GLOBAL.global_uid, "pincode": parseInt(GLOBAL.pincode_input)});
+                const response = await NOOBRequest("POST", "accountinfo", GLOBAL.global_iban, {"target": GLOBAL.global_iban, "uid": GLOBAL.global_uid, "pincode": GLOBAL.pincode_input});
+                console.log(response);
                 switch(response.status_code) {
                     case 400:
                         ws.send(JSON.stringify({
@@ -35,17 +36,27 @@ export async function handlePincodeData(ws, pincodeCharacter) {
                             "type": "ERROR",
                             "data": "SCAN_CARD_NOT_EXIST"
                         }));
+                        break;
                     case 403:
+                        ws.send(JSON.stringify({
+                            "type": "REDIRECT",
+                            "data": "SCAN_CARD"
+                        }));
+
                         ws.send(JSON.stringify({
                             "type": "ERROR",
                             "data": "CARD_BLOCKED"
                         }));
+
+                        GLOBAL.CLIENT_STATE = "SCAN_CARD";
+                        break;
                     case 401:
                         ws.send(JSON.stringify({
                             "type": "ERROR",
                             "data": "PINCODE_INCORRECT",
-                            "count": 3-response.data.attempts_remaining
+                            "count": response.data.attempts_remaining
                         }));
+                        break;
                     case 200:
                         ws.send(JSON.stringify({
                             "type": "REDIRECT",
@@ -53,6 +64,7 @@ export async function handlePincodeData(ws, pincodeCharacter) {
                         }));
 
                         GLOBAL.CLIENT_STATE = "OPTIONS";
+                        GLOBAL.NOOB_USER_PINCODE = GLOBAL.pincode_input;
 
                         GLOBAL.SESSION_CONTAINER = setTimeout(() => {
                             ws.send(JSON.stringify({
@@ -71,8 +83,10 @@ export async function handlePincodeData(ws, pincodeCharacter) {
                         }, SESSION_TIME);
 
                         GLOBAL.pincode_error_count = 0;
+                        break;
                 }
 
+                GLOBAL.pincode_input = "";
                 return;
             }
 

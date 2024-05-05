@@ -13,7 +13,9 @@ export const SESSION_TIME = 120000; // 2 min
 export let GLOBAL = {
     CLIENT_STATE: "NULL",
     PREVIOUS_MONEY_METHOD: "NULL",
+    
     NOOB_FLAG: false,
+    NOOB_USER_PINCODE: null,
 
     SESSION_CONTAINER: null,
 

@@ -200,6 +200,13 @@ document.querySelector("#start").addEventListener("click", () => {
                         icon: "error"
                     });
                     break;
+                case "NOOB_TRANSACTION":
+                    Swal.fire({
+                        title: "Transactie geschiedenis niet mogelijk",
+                        text: "De optie transactie geschiedenis is alleen mogelijk voor klanten van de Wild West Bank",
+                        icon: "info"
+                    });
+                    break;
             }
         } else if(data.type == "SUCCESS") {
             switch(data.data) {
@@ -214,7 +221,8 @@ document.querySelector("#start").addEventListener("click", () => {
         } else if(data.type == "USER_DATA" && CLIENT_STATE == "OPTIONS") {
             document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
         
-        } else if(data.type == "GET_INFO" && CLIENT_STATE == "GET_INFO") {
+        } else if(data.type == "GET_INFO") {
+            console.log("Just received my GET_INFO data!");
             document.querySelector("#gegevens-id").innerHTML = "ID: " + data.customer_id;
             document.querySelector("#gegevens-naam").innerHTML = "Naam: " + data.name;
             document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + formatIBAN(data.iban);

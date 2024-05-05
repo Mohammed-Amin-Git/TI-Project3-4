@@ -34,7 +34,14 @@ export function handleWebSocketData(ws, data, port) {
           handlePrintReceipt(ws, port, json_data.receipt_option);
           break;
         case "TRANSACTION":
-          handleTransaction(ws); 
+          if(GLOBAL.NOOB_FLAG) {
+            ws.send(JSON.stringify({
+              "type": "ERROR",
+              "data": "NOOB_TRANSACTION"
+            }));
+          } else {
+            handleTransaction(ws); 
+          }
           break;
         case "SNELPINNEN":
           ws.send(JSON.stringify({
