@@ -13,6 +13,7 @@ export const SESSION_TIME = 120000; // 2 min
 export let GLOBAL = {
     CLIENT_STATE: "NULL",
     PREVIOUS_MONEY_METHOD: "NULL",
+    NOOB_FLAG: false,
 
     SESSION_CONTAINER: null,
 
@@ -48,4 +49,29 @@ export function handleWebSocketConnection(ws) {
     ws.on('message', data => {
       handleWebSocketData(ws, data, port);
     });
+}
+
+export async function NOOBRequest(method, endpoint, iban, body) {
+    const options = {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'NOOB-TOKEN': process.env.NOOB_TOKEN
+      },
+      body: JSON.stringify(body)
+    }
+
+    try {
+      const response = await fetch(`https://${process.env.NOOB_HOST}/api/noob/${endpoint}?target=${iban}`, options);
+      const status_code = response.status;
+      // const json = await response.text();
+      const json = await response.json();
+
+      return {
+        status_code: status_code,
+        data: json
+      };
+    } catch(err) {
+        console.error(err.stack);
+    }
 }
