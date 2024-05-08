@@ -1,0 +1,81 @@
+Date : 2024-05-06 01:17:59
+Directory : c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4
+Total : 32 files,  5564 codes, 141 comments, 345 blanks, all 6050 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          4 |      3,166 |          0 |          4 |      3,170 |
+| JavaScript |         20 |      1,457 |         67 |        254 |      1,778 |
+| CSS        |          1 |        412 |          0 |          1 |        413 |
+| C++        |          2 |        308 |         51 |         79 |        438 |
+| HTML       |          1 |        197 |         23 |          3 |        223 |
+| XML        |          3 |         22 |          0 |          0 |         22 |
+| Markdown   |          1 |          2 |          0 |          4 |          6 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                                                              | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                                                                 |         32 |      5,564 |        141 |        345 |      6,050 |
+| . (Files)                                                                                                                                                                         |          1 |          2 |          0 |          4 |          6 |
+| .idea                                                                                                                                                                             |          3 |         22 |          0 |          0 |         22 |
+| API                                                                                                                                                                               |          6 |      1,109 |         12 |         46 |      1,167 |
+| API (Files)                                                                                                                                                                       |          3 |      1,021 |          9 |         27 |      1,057 |
+| API\modules                                                                                                                                                                       |          3 |         88 |          3 |         19 |        110 |
+| GUI                                                                                                                                                                               |         20 |      4,123 |         78 |        216 |      4,417 |
+| GUI (Files)                                                                                                                                                                       |          3 |      2,260 |          4 |          7 |      2,271 |
+| GUI\modules                                                                                                                                                                       |         14 |        815 |         47 |        146 |      1,008 |
+| GUI\modules (Files)                                                                                                                                                               |          1 |         59 |         12 |         19 |         90 |
+| GUI\modules\handleWebSocketConnection                                                                                                                                             |         13 |        756 |         35 |        127 |        918 |
+| GUI\modules\handleWebSocketConnection (Files)                                                                                                                                     |          2 |         95 |          6 |         13 |        114 |
+| GUI\modules\handleWebSocketConnection\cashModules                                                                                                                                 |          2 |        131 |          9 |         24 |        164 |
+| GUI\modules\handleWebSocketConnection\databaseConnectionModule                                                                                                                    |          1 |         32 |          2 |          7 |         41 |
+| GUI\modules\handleWebSocketConnection\handleSerialConnection                                                                                                                      |          3 |        231 |         10 |         33 |        274 |
+| GUI\modules\handleWebSocketConnection\handleWebSocketData                                                                                                                         |          5 |        267 |          8 |         50 |        325 |
+| GUI\public                                                                                                                                                                        |          3 |      1,048 |         27 |         63 |      1,138 |
+| Microcontroller                                                                                                                                                                   |          2 |        308 |         51 |         79 |        438 |
+| Microcontroller\SerialInterface                                                                                                                                                   |          1 |        198 |         21 |         58 |        277 |
+| Microcontroller\writeDataToBlocks                                                                                                                                                 |          1 |        110 |         30 |         21 |        161 |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                                                                                          | language   | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\.idea\TI-Project3-4.iml                                                                    | XML        |          8 |          0 |          0 |          8 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\.idea\modules.xml                                                                          | XML        |          8 |          0 |          0 |          8 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\.idea\vcs.xml                                                                              | XML        |          6 |          0 |          0 |          6 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\API\index.js                                                                               | JavaScript |        103 |          9 |         25 |        137 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\API\modules\createDBConnectionViaSSH.js                                                    | JavaScript |         32 |          2 |          7 |         41 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\API\modules\updateCustomerBalance.js                                                       | JavaScript |          4 |          0 |          2 |          6 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\API\modules\validationFunctions.js                                                         | JavaScript |         52 |          1 |         10 |         63 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\API\package-lock.json                                                                      | JSON       |        899 |          0 |          1 |        900 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\API\package.json                                                                           | JSON       |         19 |          0 |          1 |         20 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\index.js                                                                               | JavaScript |         12 |          4 |          5 |         21 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection.js                                                   | JavaScript |         59 |         12 |         19 |         90 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\cashModules\cashCombination.js                       | JavaScript |         84 |          6 |         18 |        108 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\cashModules\validateIncomingAmount.js                | JavaScript |         47 |          3 |          6 |         56 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\databaseConnectionModule\createDBConnectionViaSSH.js | JavaScript |         32 |          2 |          7 |         41 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleSerialConnection.js                            | JavaScript |         52 |          4 |         11 |         67 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleSerialConnection\handleGeldOpnemen.js          | JavaScript |         28 |          1 |          3 |         32 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleSerialConnection\handleIncomingUID.js          | JavaScript |         59 |          4 |          5 |         68 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleSerialConnection\handlePincodeData.js          | JavaScript |        144 |          5 |         25 |        174 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleWebSocketData.js                               | JavaScript |         43 |          2 |          2 |         47 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleWebSocketData\handleGeldOpnemen.js             | JavaScript |         84 |          6 |         20 |        110 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleWebSocketData\handleReceipt.js                 | JavaScript |         53 |          1 |          9 |         63 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleWebSocketData\handleSnelpinnen.js              | JavaScript |         35 |          1 |          6 |         42 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleWebSocketData\handleUitloggen.js               | JavaScript |         45 |          0 |          9 |         54 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\modules\handleWebSocketConnection\handleWebSocketData\handleUserData.js                | JavaScript |         50 |          0 |          6 |         56 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\package-lock.json                                                                      | JSON       |      2,225 |          0 |          1 |      2,226 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\package.json                                                                           | JSON       |         23 |          0 |          1 |         24 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\public\app.js                                                                          | JavaScript |        439 |          4 |         59 |        502 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\public\index.html                                                                      | HTML       |        197 |         23 |          3 |        223 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\GUI\public\style.css                                                                       | CSS        |        412 |          0 |          1 |        413 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\Microcontroller\SerialInterface\SerialInterface.ino                                        | C++        |        198 |         21 |         58 |        277 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\Microcontroller\writeDataToBlocks\writeDataToBlocks.ino                                    | C++        |        110 |         30 |         21 |        161 |
+| c:\Users\User\Desktop\Hogeschool\Projecten\Project34\Code\Git-BankServer\TI-Project3-4\README.md                                                                                  | Markdown   |          2 |          0 |          4 |          6 |
+| Total                                                                                                                                                                             |            |      5,564 |        141 |        345 |      6,050 |
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

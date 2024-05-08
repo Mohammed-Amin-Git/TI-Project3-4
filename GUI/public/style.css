@@ -53,12 +53,9 @@ header {
     transform: translate(-50%, -50%);
     font-size: 150px;
     color: #1b1e3d;
-    padding-left: 30px;
-    padding-right: 20px;
-    padding-top: 30px;
-    padding-bottom: 30px;
     border-radius: 20px;
     background-color: #e3e5ff;
+    width: 100%;
 }
 #card-symbol span {
     font-size: 60px;
@@ -380,13 +377,17 @@ header {
     overflow-y: scroll;
     overflow-x: hidden;
     background-color: #fff;
+    font-family: "Overpass", sans-serif; 
 }
 .transaction-div {
     width: 100%;
     border-bottom: solid 1px black;
+    position: relative;
+    padding: 5px;
 }
 .transaction-div p {
     position: relative;
+    top: 10px;
     left: 10px;
     line-height: 4px;
     font-size: 20px;
@@ -410,4 +411,16 @@ header {
     padding: 0;
     margin: 0;
     color: #1b1e3d;
+}
+.flags {
+    width: 64px;
+    height: 64px;
+    cursor: pointer;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+#flag-container {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }

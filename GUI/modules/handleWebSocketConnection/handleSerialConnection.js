@@ -1,18 +1,16 @@
 import { handleGeldOpnemen } from "./handleSerialConnection/handleGeldOpnemen.js";
 import { handleIncomingUID } from "./handleSerialConnection/handleIncomingUID.js";
 import { handlePincodeData } from "./handleSerialConnection/handlePincodeData.js";
-import { GLOBAL, SESSION_TIME } from "../handleWebSocketConnection.js";
-import { db } from "./databaseConnectionModule/createDBConnectionViaSSH.js";
-import { obfuscateIBAN } from "./cashModules/cashCombination.js";
+import { GLOBAL } from "../handleWebSocketConnection.js";
 
+// The server receives serial data from the microcontroller in json format
 export function handleSerialConnection(ws, data, port) {
-        console.log(data);
         // Parsing incoming data
         let dataObj = JSON.parse(data);
 
         // Selecting which type of data to handle
         switch(dataObj.type) {
-          case "CARD_INFO":
+          case "CARD_INFO": // Data from the RFID card, containing a IBAN and an UID
             if(GLOBAL.CLIENT_STATE == "SCAN_CARD") {
               let uid = dataObj.uid.trim();
               let iban = dataObj.iban.trim();
@@ -23,9 +21,10 @@ export function handleSerialConnection(ws, data, port) {
               handleIncomingUID(ws, uid, iban);
             }
             break;
-          case "KEYPAD":
+          case "KEYPAD": // Data from the Keypad, containing a character
               let keypadCharacter = String.fromCharCode(dataObj.data);
               
+              // The Keypad is used when you enter your pincode, but also when entering a specific amount
               if(GLOBAL.CLIENT_STATE == "PINCODE") {
                 handlePincodeData(ws, keypadCharacter); // Handle PINCODE data
 
@@ -34,7 +33,7 @@ export function handleSerialConnection(ws, data, port) {
 
               }
               break;
-          case "DISPENSE_STATUS":
+          case "DISPENSE_STATUS": // Feedback after dispensing the money
                 if(dataObj.data == "SUCCESS") {
                   ws.send(JSON.stringify({
                     "type": "SUCCESS",
@@ -49,7 +48,7 @@ export function handleSerialConnection(ws, data, port) {
                   GLOBAL.CLIENT_STATE = "RECEIPT_OPTION";
                 }
               break;
-          case "RECEIPT_STATUS":
+          case "RECEIPT_STATUS": // Feedback after printing a receipt
               if(dataObj.data == "SUCCESS") {
                 ws.send(JSON.stringify({
                   "type": "REDIRECT",

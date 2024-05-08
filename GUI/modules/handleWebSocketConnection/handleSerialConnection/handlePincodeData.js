@@ -149,6 +149,7 @@ export async function handlePincodeData(ws, pincodeCharacter) {
                         }));
 
                         GLOBAL.user_id = null;
+                        GLOBAL.NOOB_FLAG = false;
                         GLOBAL.CLIENT_STATE = "SCAN_CARD";
                     }, SESSION_TIME);
                 }

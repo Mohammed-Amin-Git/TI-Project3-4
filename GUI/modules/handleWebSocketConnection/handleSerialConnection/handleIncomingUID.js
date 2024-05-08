@@ -60,6 +60,7 @@ export async function handleIncomingUID(ws, uid, iban) {
                 "data": "PINCODE"
                 }));
 
+                GLOBAL.NOOB_FLAG = false;
                 GLOBAL.CLIENT_STATE = "PINCODE";
             }
         }

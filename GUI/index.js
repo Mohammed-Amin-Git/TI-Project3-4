@@ -1,4 +1,7 @@
+// Custom modules
 import { handleWebSocketConnection } from './modules/handleWebSocketConnection.js';
+
+// NPM modules
 import express, { json } from 'express';
 import { WebSocketServer } from 'ws';
 import 'dotenv/config';

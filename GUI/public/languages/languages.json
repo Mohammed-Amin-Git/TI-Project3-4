@@ -1,0 +1,526 @@
+{
+    "nl": {
+        "headerTitle": "Welkom bij Wild West Bank!",
+        "scanCardMessage": "Scan uw kaart!",
+        "enterPasscodeMessage": "Voor uw pincode alsjeblieft in",
+        "welcomeBackMessage": "Welkom terug, ",
+
+        "menuOptions": {
+            "quickPin": "Snelpinnen",
+            "withdraw": "Geld opnemen",
+            "getInfo": "Gegevens ophalen",
+            "transactionHistory": "Transcatie geschiedenis",
+            "logout": "Uitloggen"
+        },
+
+        "getInfoTitle": "Gebruiker gegevens",
+        "userInfoRows": {
+            "name": "Naam",
+            "balance": "Saldo",
+            "creationDate": "Gemaakt op:"
+        },
+
+        "transactionHistory": {
+            "transactionID": "Transactie ID",
+            "date": "Datum",
+            "amount": "Bedrag"
+        },
+
+        "withdrawMessage": "Voor uw bedrag in: (€5-100)",
+        "withdrawOption": "Kies uit de volgende bedragen",
+        "billOption": "Biljetkeuze",
+        "dispensingMoney": "geld uitdelen",
+
+        "receiptOption": "Wilt u de bon?",
+        "receiptMessage": "Pak uw bon",
+
+        "receiptOptions": {
+            "yes": "ja",
+            "no": "nee"
+        },
+
+        "errorMessages": {
+            "SCAN_CARD_NOT_EXIST": {
+                "title": "Onbekende kaart",
+                "text": "Uw kaart is niet geregistreerd in de database."
+            },
+
+            "INVALID_CARD": {
+                "title": "Ongeldige kaart",
+                "text": "Uw gescande kaart is geen geldige bankpas."
+            },
+
+            "PINCODE_INCORRECT": {
+                "title": "Incorrecte pincode",
+                "text": " pogingen over, voordat uw kaart wordt geblokkeerd."
+            },
+
+            "CARD_BLOCKED": {
+                "title": "Kaart geblokkeerd",
+                "text": "Neem contact op met de klantenservice om uw kaart te deblokkeren."
+            },
+
+            "INVALID_CASH_AMOUNT": {
+                "title": "Ongeldige hoeveelheid",
+                "text": "Geef alstublieft een hoeveelheid op het volgende domein: €5-100"
+            },
+
+            "INVALID_MULTIPLE": {
+                "title": "Ongeldige hoeveelheid",
+                "text": "Het ingevoerde hoeveelheid moet een veelvoud van vijf zijn."
+            },
+
+            "LOW_BALANCE": {
+                "title": "Niet genoeg saldo",
+                "text": "U heeft te weinig saldo om de ingevoeerde hoeveelheid te pinnen."
+            },
+
+            "INVALID_QUICK_PIN": {
+                "title": "Ongeldige hoeveelheid",
+                "text": "Een ongeldige hoeveelheid is doorgegeven."
+            },
+
+            "SESSION_EXPIRED": {
+                "title": "Sessie verlopen",
+                "text": "Uw sessie is voorlopen."
+            },
+
+            "LOW_ATM_BILLS": {
+                "title": "Weinig biljetten",
+                "text": "De ATM heeft niet genoeg biljetten om de transactie te vervullen."
+            },
+
+            "NOOB_TRANSACTION": {
+                "title": "Transactie geschiedenis niet mogelijk",
+                "text": "De optie transactie geschiedenis is alleen mogelijk voor klanten van de Wild West Bank"
+            }
+        },
+
+        "successMessages": {
+            "TRANSACTION_SUCCESS": {
+                "title": "Dankuwel",
+                "text": "Bedankt voor het pinnen bij Wild West Bank!"
+            }
+        }
+    },
+
+    "en": {
+        "headerTitle": "Welcome to Wild West Bank!",
+        "scanCardMessage": "Scan your card!",
+        "enterPasscodeMessage": "Please enter your passcode",
+        "welcomeBackMessage": "Welcome back, ",
+
+        "menuOptions": {
+            "quickPin": "Quick PIN",
+            "withdraw": "Withdraw money",
+            "getInfo": "Get user info",
+            "transactionHistory": "Transaction history",
+            "logout": "Logout"
+        },
+
+        "getInfoTitle": "User information",
+        "userInfoRows": {
+            "name": "Name",
+            "balance": "Balance",
+            "creationDate": "Created on:"
+        },
+
+        "transactionHistory": {
+            "transactionID": "Transaction ID",
+            "date": "Date",
+            "amount": "Amount"
+        },
+
+        "withdrawMessage": "Enter your amount: (€5-100)",
+        "withdrawOption": "Choose from the following amounts",
+        "billOption": "Bill choice",
+        "dispensingMoney": "dispensing money",
+
+        "receiptOption": "Would you like the receipt?",
+        "receiptMessage": "Collect your receipt",
+
+        "receiptOptions": {
+            "yes": "yes",
+            "no": "no"
+        },
+
+        "errorMessages": {
+            "SCAN_CARD_NOT_EXIST": {
+                "title": "Unknown card",
+                "text": "Your card is not registered in the database."
+            },
+
+            "INVALID_CARD": {
+                "title": "Invalid card",
+                "text": "The card you scanned is not a valid bank card."
+            },
+
+            "PINCODE_INCORRECT": {
+                "title": "Incorrect PIN",
+                "text": " attempts remaining before your card is blocked."
+            },
+
+            "CARD_BLOCKED": {
+                "title": "Card blocked",
+                "text": "Please contact customer service to unblock your card."
+            },
+
+            "INVALID_CASH_AMOUNT": {
+                "title": "Invalid amount",
+                "text": "Please provide an amount within the following range: €5-100"
+            },
+
+            "INVALID_MULTIPLE": {
+                "title": "Invalid amount",
+                "text": "The entered amount must be a multiple of five."
+            },
+
+            "LOW_BALANCE": {
+                "title": "Insufficient balance",
+                "text": "You do not have enough balance to withdraw the entered amount."
+            },
+
+            "INVALID_QUICK_PIN": {
+                "title": "Invalid amount",
+                "text": "An invalid amount has been passed."
+            },
+
+            "SESSION_EXPIRED": {
+                "title": "Session expired",
+                "text": "Your session has expired."
+            },
+
+            "LOW_ATM_BILLS": {
+                "title": "Low bills",
+                "text": "The ATM does not have enough bills to fulfill the transaction."
+            },
+
+            "NOOB_TRANSACTION": {
+                "title": "Transaction history not available",
+                "text": "The transaction history option is only available for Wild West Bank customers."
+            }
+        },
+
+        "successMessages": {
+            "TRANSACTION_SUCCESS": {
+                "title": "Thank you",
+                "text": "Thank you for banking with Wild West Bank!"
+            }
+        }
+    },
+
+    "de": {
+        "headerTitle": "Willkommen bei der Wild West Bank!",
+        "scanCardMessage": "Karte scannen!",
+        "enterPasscodeMessage": "Bitte geben Sie Ihren PIN ein",
+        "welcomeBackMessage": "Willkommen zurück, ",
+
+        "menuOptions": {
+            "quickPin": "Schnell-PIN",
+            "withdraw": "Geld abheben",
+            "getInfo": "Benutzerinformationen abrufen",
+            "transactionHistory": "Transaktionshistorie",
+            "logout": "Abmelden"
+        },
+
+        "getInfoTitle": "Benutzerinformationen",
+        "userInfoRows": {
+            "name": "Name",
+            "balance": "Kontostand",
+            "creationDate": "Erstellt am:"
+        },
+
+        "transactionHistory": {
+            "transactionID": "Transaktions-ID",
+            "date": "Datum",
+            "amount": "Betrag"
+        },
+
+        "withdrawMessage": "Geben Sie Ihren Betrag ein: (€5-100)",
+        "withdrawOption": "Wählen Sie aus den folgenden Beträgen",
+        "billOption": "Banknotenauswahl",
+        "dispensingMoney": "Geldausgabe",
+
+        "receiptOption": "Möchten Sie den Beleg?",
+        "receiptMessage": "Nehmen Sie Ihren Beleg",
+
+        "receiptOptions": {
+            "yes": "ja",
+            "no": "nein"
+        },
+
+        "errorMessages": {
+            "SCAN_CARD_NOT_EXIST": {
+                "title": "Unbekannte Karte",
+                "text": "Ihre Karte ist nicht in der Datenbank registriert."
+            },
+
+            "INVALID_CARD": {
+                "title": "Ungültige Karte",
+                "text": "Die von Ihnen gescannte Karte ist keine gültige Bankkarte."
+            },
+
+            "PINCODE_INCORRECT": {
+                "title": "Falscher PIN",
+                "text": " Versuche übrig, bevor Ihre Karte blockiert wird."
+            },
+
+            "CARD_BLOCKED": {
+                "title": "Karte blockiert",
+                "text": "Bitte kontaktieren Sie den Kundenservice, um Ihre Karte zu entsperren."
+            },
+
+            "INVALID_CASH_AMOUNT": {
+                "title": "Ungültiger Betrag",
+                "text": "Bitte geben Sie einen Betrag im folgenden Bereich an: €5-100"
+            },
+
+            "INVALID_MULTIPLE": {
+                "title": "Ungültiger Betrag",
+                "text": "Der eingegebene Betrag muss ein Vielfaches von fünf sein."
+            },
+
+            "LOW_BALANCE": {
+                "title": "Unzureichendes Guthaben",
+                "text": "Sie haben nicht genügend Guthaben, um den eingegebenen Betrag abzuheben."
+            },
+
+            "INVALID_QUICK_PIN": {
+                "title": "Ungültiger Betrag",
+                "text": "Es wurde ein ungültiger Betrag übermittelt."
+            },
+
+            "SESSION_EXPIRED": {
+                "title": "Sitzung abgelaufen",
+                "text": "Ihre Sitzung ist abgelaufen."
+            },
+
+            "LOW_ATM_BILLS": {
+                "title": "Wenig Banknoten",
+                "text": "Der Geldautomat hat nicht genügend Banknoten, um die Transaktion durchzuführen."
+            },
+
+            "NOOB_TRANSACTION": {
+                "title": "Transaktionshistorie nicht verfügbar",
+                "text": "Die Transaktionshistorie-Option ist nur für Kunden der Wild West Bank verfügbar."
+            }
+        },
+
+        "successMessages": {
+            "TRANSACTION_SUCCESS": {
+                "title": "Vielen Dank",
+                "text": "Vielen Dank für Ihre Bankgeschäfte bei der Wild West Bank!"
+            }
+        }
+    }, 
+
+    "fr": {
+        "headerTitle": "Bienvenue à la Wild West Bank !",
+        "scanCardMessage": "Scannez votre carte !",
+        "enterPasscodeMessage": "Veuillez entrer votre code confidentiel",
+        "welcomeBackMessage": "Bienvenue de retour, ",
+
+        "menuOptions": {
+            "quickPin": "Code rapide",
+            "withdraw": "Retirer de l'argent",
+            "getInfo": "Obtenir des informations",
+            "transactionHistory": "Historique des transactions",
+            "logout": "Déconnexion"
+        },
+
+        "getInfoTitle": "Informations utilisateur",
+        "userInfoRows": {
+            "name": "Nom",
+            "balance": "Solde",
+            "creationDate": "Créé le :"
+        },
+
+        "transactionHistory": {
+            "transactionID": "ID de transaction",
+            "date": "Date",
+            "amount": "Montant"
+        },
+
+        "withdrawMessage": "Entrez votre montant : (€5-100)",
+        "withdrawOption": "Choisissez parmi les montants suivants",
+        "billOption": "Choix de billets",
+        "dispensingMoney": "distribution d'argent",
+
+        "receiptOption": "Voulez-vous le reçu ?",
+        "receiptMessage": "Prenez votre reçu",
+
+        "receiptOptions": {
+            "yes": "oui",
+            "no": "non"
+        },
+
+        "errorMessages": {
+            "SCAN_CARD_NOT_EXIST": {
+                "title": "Carte inconnue",
+                "text": "Votre carte n'est pas enregistrée dans la base de données."
+            },
+
+            "INVALID_CARD": {
+                "title": "Carte invalide",
+                "text": "La carte que vous avez scannée n'est pas une carte bancaire valide."
+            },
+
+            "PINCODE_INCORRECT": {
+                "title": "Code confidentiel incorrect",
+                "text": " tentatives restantes avant que votre carte soit bloquée."
+            },
+
+            "CARD_BLOCKED": {
+                "title": "Carte bloquée",
+                "text": "Veuillez contacter le service client pour débloquer votre carte."
+            },
+
+            "INVALID_CASH_AMOUNT": {
+                "title": "Montant invalide",
+                "text": "Veuillez fournir un montant dans la plage suivante : €5-100"
+            },
+
+            "INVALID_MULTIPLE": {
+                "title": "Montant invalide",
+                "text": "Le montant saisi doit être un multiple de cinq."
+            },
+
+            "LOW_BALANCE": {
+                "title": "Solde insuffisant",
+                "text": "Vous n'avez pas assez de solde pour retirer le montant saisi."
+            },
+
+            "INVALID_QUICK_PIN": {
+                "title": "Montant invalide",
+                "text": "Un montant invalide a été transmis."
+            },
+
+            "SESSION_EXPIRED": {
+                "title": "Session expirée",
+                "text": "Votre session a expiré."
+            },
+
+            "LOW_ATM_BILLS": {
+                "title": "Peu de billets",
+                "text": "Le distributeur automatique n'a pas assez de billets pour effectuer la transaction."
+            },
+
+            "NOOB_TRANSACTION": {
+                "title": "Historique des transactions non disponible",
+                "text": "L'option d'historique des transactions est uniquement disponible pour les clients de la Wild West Bank."
+            }
+        },
+
+        "successMessages": {
+            "TRANSACTION_SUCCESS": {
+                "title": "Merci",
+                "text": "Merci d'avoir effectué des opérations bancaires avec la Wild West Bank !"
+            }
+        }
+    },
+
+    "es": {
+        "headerTitle": "¡Bienvenido/a al Banco del Oeste Salvaje!",
+        "scanCardMessage": "¡Escanea tu tarjeta!",
+        "enterPasscodeMessage": "Por favor, ingresa tu código PIN",
+        "welcomeBackMessage": "¡Bienvenido de nuevo, ",
+
+        "menuOptions": {
+            "quickPin": "PIN rápido",
+            "withdraw": "Retirar dinero",
+            "getInfo": "Obtener información",
+            "transactionHistory": "Historial de transacciones",
+            "logout": "Cerrar sesión"
+        },
+
+        "getInfoTitle": "Información del usuario",
+        "userInfoRows": {
+            "name": "Nombre",
+            "balance": "Saldo",
+            "creationDate": "Creado en:"
+        },
+
+        "transactionHistory": {
+            "transactionID": "ID de transacción",
+            "date": "Fecha",
+            "amount": "Cantidad"
+        },
+
+        "withdrawMessage": "Ingresa tu cantidad: (€5-100)",
+        "withdrawOption": "Elige entre las siguientes cantidades",
+        "billOption": "Selección de billetes",
+        "dispensingMoney": "entrega de dinero",
+
+        "receiptOption": "¿Deseas el recibo?",
+        "receiptMessage": "Toma tu recibo",
+
+        "receiptOptions": {
+            "yes": "sí",
+            "no": "no"
+        },
+
+        "errorMessages": {
+            "SCAN_CARD_NOT_EXIST": {
+                "title": "Tarjeta desconocida",
+                "text": "Tu tarjeta no está registrada en la base de datos."
+            },
+
+            "INVALID_CARD": {
+                "title": "Tarjeta inválida",
+                "text": "La tarjeta escaneada no es una tarjeta bancaria válida."
+            },
+
+            "PINCODE_INCORRECT": {
+                "title": "PIN incorrecto",
+                "text": " intentos restantes antes de que tu tarjeta sea bloqueada."
+            },
+
+            "CARD_BLOCKED": {
+                "title": "Tarjeta bloqueada",
+                "text": "Por favor, contacta al servicio al cliente para desbloquear tu tarjeta."
+            },
+
+            "INVALID_CASH_AMOUNT": {
+                "title": "Cantidad inválida",
+                "text": "Por favor, ingresa una cantidad dentro del siguiente rango: €5-100"
+            },
+
+            "INVALID_MULTIPLE": {
+                "title": "Cantidad inválida",
+                "text": "La cantidad ingresada debe ser un múltiplo de cinco."
+            },
+
+            "LOW_BALANCE": {
+                "title": "Saldo insuficiente",
+                "text": "No tienes suficiente saldo para retirar la cantidad ingresada."
+            },
+
+            "INVALID_QUICK_PIN": {
+                "title": "Cantidad inválida",
+                "text": "Se ha pasado una cantidad inválida."
+            },
+
+            "SESSION_EXPIRED": {
+                "title": "Sesión expirada",
+                "text": "Tu sesión ha expirado."
+            },
+
+            "LOW_ATM_BILLS": {
+                "title": "Pocos billetes",
+                "text": "El cajero automático no tiene suficientes billetes para completar la transacción."
+            },
+
+            "NOOB_TRANSACTION": {
+                "title": "Historial de transacciones no disponible",
+                "text": "La opción de historial de transacciones solo está disponible para clientes del Banco del Oeste Salvaje."
+            }
+        },
+
+        "successMessages": {
+            "TRANSACTION_SUCCESS": {
+                "title": "Gracias",
+                "text": "¡Gracias por operar con el Banco del Oeste Salvaje!"
+            }
+        }
+    }
+}
