@@ -4,7 +4,7 @@
         "scanCardMessage": "Scan uw kaart!",
         "enterPasscodeMessage": "Voor uw pincode alsjeblieft in",
         "welcomeBackMessage": "Welkom terug, ",
-
+   
         "menuOptions": {
             "quickPin": "Snelpinnen",
             "withdraw": "Geld opnemen",
@@ -107,7 +107,7 @@
     "en": {
         "headerTitle": "Welcome to Wild West Bank!",
         "scanCardMessage": "Scan your card!",
-        "enterPasscodeMessage": "Please enter your passcode",
+        "enterPasscodeMessage": "Please enter your pin",
         "welcomeBackMessage": "Welcome back, ",
 
         "menuOptions": {
