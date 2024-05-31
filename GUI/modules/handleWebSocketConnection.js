@@ -73,10 +73,10 @@ export async function NOOBRequest(method, endpoint, iban, body) {
     }
 
     // Exception handling te prevent server crashes
+    const response = await fetch(`https://${process.env.NOOB_HOST}/api/noob/${endpoint}?target=${iban}`, options);
+    const status_code = response.status;
     try {
       // Perform request and parse the response
-      const response = await fetch(`https://${process.env.NOOB_HOST}/api/noob/${endpoint}?target=${iban}`, options);
-      const status_code = response.status;
       const json = await response.json();
 
       // Return response
@@ -85,6 +85,9 @@ export async function NOOBRequest(method, endpoint, iban, body) {
         data: json
       };
     } catch(err) {
-        console.error(err.stack);
+        return {
+          status_code: status_code,
+          data: {}
+        }
     }
 }

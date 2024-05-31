@@ -60,10 +60,9 @@ export async function handleSelectCashCombinations(ws, port, combination_number)
     // TODO: Implement balance using /withdraw endpoint via noob server
     if(GLOBAL.NOOB_FLAG) {
       const response = await NOOBRequest("POST", "withdraw", GLOBAL.global_iban, {
-        "target": GLOBAL.global_iban, 
         "uid": GLOBAL.global_uid, 
         "pincode": GLOBAL.NOOB_USER_PINCODE,
-        "amount": GLOBAL.cash_amount
+        "amount": GLOBAL.cash_amount * 100
       });
 
       if(response.status_code != 200) {
@@ -73,8 +72,8 @@ export async function handleSelectCashCombinations(ws, port, combination_number)
     } else {
       // Updating the balance in the database
       db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [GLOBAL.user_id]).then(([rows, fields]) => {
-        let balance = rows[0].Balance;
-        let new_balance = balance - GLOBAL.cash_amount;
+        let balance = Math.round(rows[0].Balance / 100, 2);
+        let new_balance = (balance - GLOBAL.cash_amount) * 100;
 
         db.query("UPDATE Customer SET Balance = ? WHERE Customer_ID = ?", [new_balance, GLOBAL.user_id]);
       });
@@ -96,6 +95,10 @@ export async function handleSelectCashCombinations(ws, port, combination_number)
     
     // Sending cash_combination array to the microcontroller so that it can be dispensed
     port.write(JSON.stringify({
+      "type": "DISPENSE_CASH",
+      "cash_combination": GLOBAL.cash_combination
+    }));
+    console.log(JSON.stringify({
       "type": "DISPENSE_CASH",
       "cash_combination": GLOBAL.cash_combination
     }));

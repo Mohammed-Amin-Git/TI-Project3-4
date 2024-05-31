@@ -4,9 +4,11 @@ import { handlePincodeData } from "./handleSerialConnection/handlePincodeData.js
 import { GLOBAL } from "../handleWebSocketConnection.js";
 
 // The server receives serial data from the microcontroller in json format
-export function handleSerialConnection(ws, data, port) {
+export function handleSerialConnection(ws, data) {
         // Parsing incoming data
         let dataObj = JSON.parse(data);
+        console.log(dataObj);
+        
 
         // Selecting which type of data to handle
         switch(dataObj.type) {

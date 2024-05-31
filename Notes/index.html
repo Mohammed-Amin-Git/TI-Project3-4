@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeechSynthesis Proof of Concept</title>
+    <script>
+        document.addEventListener('fullscreenchange', (event) => {
+            document.querySelector("#btn").click();
+        });
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        const synth = window.speechSynthesis;
+
+        function speak(text, voice) {
+            if(synth.speaking) {
+                console.error("Error: A voice is already speaking!");
+                return;
+            }
+
+            const utterThis = new SpeechSynthesisUtterance(text);
+            utterThis.voice = voice;
+            synth.speak(utterThis);
+        }
+    </script>
+</head>
+<body>
+    <button onclick="document.documentElement.requestFullscreen();" id="btn">CLick me</button>
+</body>
+</html>

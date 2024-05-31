@@ -66,7 +66,7 @@ header {
 #rfid {
     position: absolute;
     top: 85%;
-    left: 90%;
+    right: 75%;
     transform: translate(-50%, -50%);
     width: 200px;
     height: auto;
@@ -422,5 +422,5 @@ header {
 #flag-container {
     position: absolute;
     bottom: 10px;
-    left: 10px;
+    right: 10px;
 }

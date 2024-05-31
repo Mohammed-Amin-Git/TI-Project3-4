@@ -50,5 +50,16 @@ export function handleBack(ws) {
         }));
 
         GLOBAL.CLIENT_STATE = "OPTIONS";
+    } else if(GLOBAL.CLIENT_STATE == "PINCODE") {
+        GLOBAL.pincode_count = 0;
+        GLOBAL.pincode_error_count = 0;
+        GLOBAL.pincode_input = "";
+
+        ws.send(JSON.stringify({
+          "type": "REDIRECT",
+          "data": "SCAN_CARD"
+        }));
+
+        GLOBAL.CLIENT_STATE = "SCAN_CARD";
     }
 }

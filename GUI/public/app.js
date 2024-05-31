@@ -19,7 +19,7 @@ const pages = {
 //debug(pages.SNELPINNEN);
 
 let global_languages;
-let LANGUAGE = 'de';
+let LANGUAGE = 'nl';
 
 setLanguages();
 
@@ -42,6 +42,7 @@ document.querySelector("#start").addEventListener("click", () => {
                 case "SCAN_CARD":
                     deactivateAllPages();
                     activate_page(pages.SCAN_CARD);
+                    document.querySelector("#pincode-placeholder").value = "";
                     CLIENT_STATE="SCAN_CARD";
                     break;
                 case "PINCODE":
@@ -214,6 +215,12 @@ document.querySelector("#start").addEventListener("click", () => {
                         icon: "info"
                     });
                     break;
+                case "DAILY_LIMIT":
+                    Swal.fire({
+                        title: global_languages[LANGUAGE].errorMessages.DAILY_LIMIT.title,
+                        text: global_languages[LANGUAGE].errorMessages.DAILY_LIMIT.text,
+                        icon: "error"
+                    });
             }
         } else if(data.type == "SUCCESS") {
             switch(data.data) {

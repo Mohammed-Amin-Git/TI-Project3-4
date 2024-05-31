@@ -93,6 +93,11 @@
             "NOOB_TRANSACTION": {
                 "title": "Transactie geschiedenis niet mogelijk",
                 "text": "De optie transactie geschiedenis is alleen mogelijk voor klanten van de Wild West Bank"
+            },
+
+            "DAILY_LIMIT": {
+                "title": "Dagelijkse limiet bereikt",
+                "text": "De dagelijkse limiet van €500 is bereikt!"
             }
         },
 
@@ -198,6 +203,10 @@
             "NOOB_TRANSACTION": {
                 "title": "Transaction history not available",
                 "text": "The transaction history option is only available for Wild West Bank customers."
+            },
+            "DAILY_LIMIT": {
+                "title": "Daily limit reached",
+                "text": "The daily limit of €500 has been reached!"
             }
         },
 
@@ -303,6 +312,10 @@
             "NOOB_TRANSACTION": {
                 "title": "Transaktionshistorie nicht verfügbar",
                 "text": "Die Transaktionshistorie-Option ist nur für Kunden der Wild West Bank verfügbar."
+            },
+            "DAILY_LIMIT": {
+                "title": "Tageslimit erreicht",
+                "text": "Das Tageslimit von 500 € ist erreicht!"
             }
         },
 
@@ -408,6 +421,11 @@
             "NOOB_TRANSACTION": {
                 "title": "Historique des transactions non disponible",
                 "text": "L'option d'historique des transactions est uniquement disponible pour les clients de la Wild West Bank."
+            },
+
+            "DAILY_LIMIT": {
+                "title": "Limite quotidienne atteinte",
+                "text": "La limite journalière de 500 € a été atteinte !"
             }
         },
 
@@ -513,6 +531,11 @@
             "NOOB_TRANSACTION": {
                 "title": "Historial de transacciones no disponible",
                 "text": "La opción de historial de transacciones solo está disponible para clientes del Banco del Oeste Salvaje."
+            },
+            
+            "DAILY_LIMIT": {
+                "title": "Límite diario alcanzado",
+                "text": "¡Se ha alcanzado el límite diario de 500€!"
             }
         },
 

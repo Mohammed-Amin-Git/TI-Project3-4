@@ -22,7 +22,7 @@ export async function handlePincodeData(ws, pincodeCharacter) {
             GLOBAL.pincode_count = 0;
 
             if(GLOBAL.NOOB_FLAG) {
-                const response = await NOOBRequest("POST", "accountinfo", GLOBAL.global_iban, {"target": GLOBAL.global_iban, "uid": GLOBAL.global_uid, "pincode": GLOBAL.pincode_input});
+                const response = await NOOBRequest("POST", "accountinfo", GLOBAL.global_iban, {"uid": GLOBAL.global_uid, "pincode": GLOBAL.pincode_input});
                 console.log(response);
                 switch(response.status_code) {
                     case 400:
