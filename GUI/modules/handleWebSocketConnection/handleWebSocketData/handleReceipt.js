@@ -38,6 +38,14 @@ export function handlePrintReceipt(ws, port, receipt_option) {
 }
 
 export function handleTransaction(ws) {
+    if(GLOBAL.NOOB_FLAG) {
+      ws.send(JSON.stringify({
+        "type": "ERROR",
+        "data": "NOOB_TRANSACTION"
+      }));
+      return;
+    }  
+
     ws.send(JSON.stringify({
         "type": "REDIRECT",
         "data": "TRANSACTION"

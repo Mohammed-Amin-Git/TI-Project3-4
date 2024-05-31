@@ -5,8 +5,8 @@
 #include <Keypad.h>
 #include <SPI.h>
 
-#define SS_PIN 10
-#define RST_PIN 9
+#define SS_PIN 9
+#define RST_PIN 8
 
 #define TX_PIN A0 // Arduino transmit  YELLOW WIRE  labeled RX on printer
 #define RX_PIN A1 // Arduino receive   GREEN WIRE   labeled TX on printer
@@ -36,19 +36,54 @@ char hexaKeys[ROWS][COLS] = {
   {'*', '0', '#'}
 };
 
-byte rowPins[ROWS] = {8, 7, 6, 5}; 
-byte colPins[COLS] = {4, 3, 2}; 
+byte rowPins[ROWS] = {22, 23, 24, 25}; 
+byte colPins[COLS] = {26, 27, 28}; 
 
 Keypad customKeypad = Keypad(makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
 unsigned long previous = millis();
 long cardInterval = 2500;
 
+//A
+const int uitL  = 37;  // 37
+const int uitR  = 36;  // 36
+const int voorL  = 38; // 38
+const int voorR  = 39; // 39
+//B 
+const int uitl  = 41; // 41
+const int uitr  = 40;  //40
+const int voorl  = 42; //42
+const int voorr  = 43; //43
+//C
+const int Uitl  = 45; //45
+const int Uitr  = 44;  //44
+const int Voorl  = 46; //46
+const int Voorr  = 47; //47
+
+#define CASH_DISPENSE_DELAY_VOOR 2500
+#define CASH_DISPENSE_DELAY_UIT 4000
+
+
 void setup(){
   Serial.begin(9600);
   mySerial.begin(19200);   
   SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522 
+
+  pinMode(uitL, OUTPUT);
+  pinMode(uitR, OUTPUT);
+  pinMode(voorL, OUTPUT);
+  pinMode(voorR, OUTPUT);
+    //1
+  pinMode(uitl, OUTPUT);
+  pinMode(uitr, OUTPUT);
+  pinMode(voorl, OUTPUT);
+  pinMode(voorr, OUTPUT);
+    //2
+  pinMode(Uitl, OUTPUT);
+  pinMode(Uitr, OUTPUT);
+  pinMode(Voorl, OUTPUT);
+  pinMode(Voorr, OUTPUT);
 
   for (byte i = 0; i < 6; i++) {
     key.keyByte[i] = 0xFF;
@@ -73,8 +108,23 @@ void loop(){
 
       for(int i=0; i<cash_combination.size(); i++) {
         int value = cash_combination[i].as<int>();
-        delay(CASH_DISPENSE_DELAY);
-        // TODO: Dispense money
+        switch(value) {
+          case 5:
+            dispenserA_voor();
+            dispenserA_uit();
+            dispenserA_stop();
+            break;
+          case 10:
+            dispenserB_voor();
+            dispenserB_uit();
+            dispenserB_stop();
+            break;
+          case 50:
+            dispenserC_voor();
+            dispenserC_uit();
+            dispenserC_stop();
+            break;
+        }
       }
 
       transferString("DISPENSE_STATUS", "SUCCESS");
@@ -131,14 +181,14 @@ void loop(){
       }
 
       String iban_first_part;
-      for (byte i = 0; i < 16; i++) {
+      for (byte i = 0; i < 8; i++) {
         if(buffer1[i] != NULL) {
             iban_first_part += (char) buffer1[i];
         }
       }
 
       String iban_second_part;
-      for (byte i = 0; i < 16; i++) {
+      for (byte i = 0; i < 10; i++) {
         if(buffer2[i] != NULL) {
             iban_second_part += (char) buffer2[i];
         }
@@ -275,3 +325,72 @@ void printBon(String datum, String bedrag, String rekening, String transactie, S
   printer.wake();       // MUST wake() before printing again, even if reset
   printer.setDefault(); // Restore printer to defaults
 }
+
+void dispenserA_voor() {
+    digitalWrite(uitL, LOW);
+    digitalWrite(uitR, LOW);
+    digitalWrite(voorL, HIGH);
+    digitalWrite(voorR, LOW);
+    delay(CASH_DISPENSE_DELAY_VOOR);
+}
+
+void dispenserA_uit() {
+    digitalWrite(uitL, HIGH);
+    digitalWrite(uitR, LOW);
+    digitalWrite(voorL, LOW);
+    digitalWrite(voorR, LOW);
+    delay(CASH_DISPENSE_DELAY_UIT);
+}
+
+void dispenserA_stop() {
+    digitalWrite(uitL, LOW);
+    digitalWrite(uitR, LOW);
+    digitalWrite(voorL, LOW);
+    digitalWrite(voorR, LOW);
+}
+
+void dispenserB_voor() {
+    digitalWrite(uitl, LOW);
+    digitalWrite(uitr, LOW);
+    digitalWrite(voorl, HIGH);
+    digitalWrite(voorr, LOW);
+    delay(CASH_DISPENSE_DELAY_VOOR);
+}
+
+void dispenserB_uit() {
+    digitalWrite(uitl, HIGH);
+    digitalWrite(uitr, LOW);
+    digitalWrite(voorl, LOW);
+    digitalWrite(voorr, LOW);
+    delay(CASH_DISPENSE_DELAY_UIT);
+}
+
+void dispenserB_stop() {
+    digitalWrite(uitl, LOW);
+    digitalWrite(uitr, LOW);
+    digitalWrite(voorl, LOW);
+    digitalWrite(voorr, LOW);
+}
+ 
+void dispenserC_voor() {
+    digitalWrite(Uitl, LOW);
+    digitalWrite(Uitr, LOW);
+    digitalWrite(Voorl, HIGH);
+    digitalWrite(Voorr, LOW);
+    delay(CASH_DISPENSE_DELAY_VOOR);
+}
+
+void dispenserC_uit() {
+    digitalWrite(Uitl, HIGH);
+    digitalWrite(Uitr, LOW);
+    digitalWrite(Voorl, LOW);
+    digitalWrite(Voorr, LOW);
+    delay(CASH_DISPENSE_DELAY_UIT);
+}
+
+void dispenserC_stop() {
+    digitalWrite(Uitl, LOW);
+    digitalWrite(Uitr, LOW);
+    digitalWrite(Voorl, LOW);
+    digitalWrite(Voorr, LOW);
+} 

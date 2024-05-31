@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { GLOBAL, bills } from "../../handleWebSocketConnection.js";
+import { GLOBAL, NOOBRequest, bills } from "../../handleWebSocketConnection.js";
 import { countNumber, findCashCombinations } from "../cashModules/cashCombination.js";
 import { db } from "../databaseConnectionModule/createDBConnectionViaSSH.js";
 
@@ -52,20 +52,32 @@ export function handleGetCashCombinations(ws) {
     });
 }
 
-export function handleSelectCashCombinations(ws, port, combination_number) {
+export async function handleSelectCashCombinations(ws, port, combination_number) {
     GLOBAL.cash_input = "";
     GLOBAL.cash_count = 0;
     GLOBAL.cash_combination = GLOBAL.cash_combinations[combination_number];
 
-    // TODO: Implement balance using /withdraw eindpoint via noob server
-    // Updating the balace in the database
-    db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [GLOBAL.user_id]).then(([rows, fields]) => {
-      let balance = rows[0].Balance;
-      let new_balance = balance - GLOBAL.cash_amount;
+    // TODO: Implement balance using /withdraw endpoint via noob server
+    if(GLOBAL.NOOB_FLAG) {
+      const response = await NOOBRequest("POST", "withdraw", GLOBAL.global_iban, {
+        "uid": GLOBAL.global_uid, 
+        "pincode": GLOBAL.NOOB_USER_PINCODE,
+        "amount": GLOBAL.cash_amount * 100
+      });
 
-      db.query("UPDATE Customer SET Balance = ? WHERE Customer_ID = ?", [new_balance, GLOBAL.user_id]);
-      console.log("Balance updated!");
-    });
+      if(response.status_code != 200) {
+        console.log(`Something went wrong when POSTing to /withdraw: ${response.status_code}`);
+      }
+
+    } else {
+      // Updating the balance in the database
+      db.query("SELECT Balance FROM Customer WHERE Customer_ID = ?", [GLOBAL.user_id]).then(([rows, fields]) => {
+        let balance = Math.round(rows[0].Balance / 100, 2);
+        let new_balance = (balance - GLOBAL.cash_amount) * 100;
+
+        db.query("UPDATE Customer SET Balance = ? WHERE Customer_ID = ?", [new_balance, GLOBAL.user_id]);
+      });
+    }
 
     // Updating bill amounts in the database
     let bills5 = countNumber(5, GLOBAL.cash_combination);
@@ -75,12 +87,18 @@ export function handleSelectCashCombinations(ws, port, combination_number) {
     db.query("UPDATE ATM SET VijfEuro = VijfEuro - ?, TienEuro = TienEuro - ?, VijftigEuro = VijftigEuro - ? WHERE ATM_ID = 1", [bills5, bills10, bills50]);
     console.log("ATM Updated!");
 
-    // Adding transcation to the database
-    GLOBAL.global_current_date = moment().format('YYYY-MM-DD hh:mm:ss');
-    db.query("INSERT INTO Transaction (Date, Customer_ID, Transaction_amount) VALUES(?,?,?)", [GLOBAL.global_current_date, GLOBAL.user_id, GLOBAL.cash_amount]);
-
+    if(!GLOBAL.NOOB_FLAG) {
+      // Adding transcation to the database
+      GLOBAL.global_current_date = moment().format('YYYY-MM-DD hh:mm:ss');
+      db.query("INSERT INTO Transaction (Date, Customer_ID, Transaction_amount) VALUES(?,?,?)", [GLOBAL.global_current_date, GLOBAL.user_id, GLOBAL.cash_amount]);
+    }
+    
     // Sending cash_combination array to the microcontroller so that it can be dispensed
     port.write(JSON.stringify({
+      "type": "DISPENSE_CASH",
+      "cash_combination": GLOBAL.cash_combination
+    }));
+    console.log(JSON.stringify({
       "type": "DISPENSE_CASH",
       "cash_combination": GLOBAL.cash_combination
     }));
@@ -90,6 +108,6 @@ export function handleSelectCashCombinations(ws, port, combination_number) {
       "data": "DISPENSE_WAIT"
     }));
     
-    clearTimeout(GLOBAL.SESSION_CONTAINER);
+    clearTimeout(GLOBAL.SESSION_CONTAINER); // Clearing session
     GLOBAL.CLIENT_STATE = "DISPENSE_WAIT";
 }

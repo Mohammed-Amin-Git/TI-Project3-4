@@ -18,9 +18,16 @@ const pages = {
 // DEBUG MODE
 //debug(pages.SNELPINNEN);
 
+let global_languages;
+let LANGUAGE = 'nl';
+
+setLanguages();
+
 document.querySelector("#start").addEventListener("click", () => {
     deactivate_page(pages.CONNECT)
     activate_page(pages.SCAN_CARD)
+
+    loadLanguage();
 
     CLIENT_STATE = "SCAN_CARD";
 
@@ -35,6 +42,7 @@ document.querySelector("#start").addEventListener("click", () => {
                 case "SCAN_CARD":
                     deactivateAllPages();
                     activate_page(pages.SCAN_CARD);
+                    document.querySelector("#pincode-placeholder").value = "";
                     CLIENT_STATE="SCAN_CARD";
                     break;
                 case "PINCODE":
@@ -131,102 +139,108 @@ document.querySelector("#start").addEventListener("click", () => {
             switch(data.data) {
                 case "SCAN_CARD_NOT_EXIST":
                     Swal.fire({
-                        title: "Onbekende kaart",
-                        text: "Uw kaart is niet geregistreerd in de database.",
+                        title: global_languages[LANGUAGE].errorMessages.SCAN_CARD_NOT_EXIST.title,
+                        text: global_languages[LANGUAGE].errorMessages.SCAN_CARD_NOT_EXIST.text,
                         icon: "question"
                     });
                     break;
                 case "INVALID_CARD":
                     Swal.fire({
-                        title: "Ongeldige kaart",
-                        text: "Uw gescande kaart is geen geldige bankpas.",
+                        title: global_languages[LANGUAGE].errorMessages.INVALID_CARD.title,
+                        text: global_languages[LANGUAGE].errorMessages.INVALID_CARD.text,
                         icon: "warning"
                     });
                     break;
                 case "PINCODE_INCORRECT":
                     Swal.fire({
-                        title: "Incorrecte pincode",
-                        text: `${data.count} pogingen over, voordat uw kaart wordt geblokkeerd.`,
+                        title: global_languages[LANGUAGE].errorMessages.PINCODE_INCORRECT.title,
+                        text: data.count + global_languages[LANGUAGE].errorMessages.PINCODE_INCORRECT.text,
                         icon: "warning"
                     });
                     document.querySelector("#pincode-placeholder").value = "";    
                     break;
                 case "CARD_BLOCKED":
                     Swal.fire({
-                        title: "Kaart geblokkeerd",
-                        text: "Neem contact op met de klantenservice om uw kaart te deblokkeren.",
+                        title: global_languages[LANGUAGE].errorMessages.CARD_BLOCKED.title,
+                        text: global_languages[LANGUAGE].errorMessages.CARD_BLOCKED.text,
                         icon: "error"
                     });
                     break;
                 case "INVALID_CASH_AMOUNT":
                     Swal.fire({
-                        title: "Ongeldige hoeveelheid",
-                        text: "Geef alstublieft een hoeveelheid op het volgende domein: €5-100",
+                        title: global_languages[LANGUAGE].errorMessages.INVALID_CASH_AMOUNT.title,
+                        text: global_languages[LANGUAGE].errorMessages.INVALID_CASH_AMOUNT.text,
                         icon: "error"
                     })
                     break;
                 case "INVALID_MULTIPLE":
                     Swal.fire({
-                        title: "Ongeldige hoeveelheid",
-                        text: "Het ingevoerde hoeveelheid moet een veelvoud van vijf zijn..",
+                        title: global_languages[LANGUAGE].errorMessages.INVALID_MULTIPLE.title,
+                        text: global_languages[LANGUAGE].errorMessages.INVALID_MULTIPLE.text,
                         icon: "error"
                     })
                     break;
                 case "LOW_BALANCE":
                     Swal.fire({
-                        title: "Niet genoeg saldo",
-                        text: "U heeft te weinig saldo om de ingevoeerde hoeveelheid te pinnen.",
+                        title: global_languages[LANGUAGE].errorMessages.LOW_BALANCE.title,
+                        text: global_languages[LANGUAGE].errorMessages.LOW_BALANCE.text,
                         icon: "error"
                     });
                     break;
                 case "INVALID_QUICK_PIN":
                     Swal.fire({
-                        title: "Ongeldige hoeveelheid",
-                        text: "Een ongeldige hoeveelheid is doorgegeven.",
+                        title: global_languages[LANGUAGE].errorMessages.INVALID_QUICK_PIN.title,
+                        text: global_languages[LANGUAGE].errorMessages.INVALID_QUICK_PIN.text,
                         icon: "error"
                     });
                     break;
                 case "SESSION_EXPIRED":
                     Swal.fire({
-                        title: "Sessie verlopen",
-                        text: "Uw sessie is voorlopen.",
+                        title: global_languages[LANGUAGE].errorMessages.SESSION_EXPIRED.title,
+                        text: global_languages[LANGUAGE].errorMessages.SESSION_EXPIRED.text,
                         icon: "error"
                     });
                     break;
                 case "LOW_ATM_BILLS":
                     Swal.fire({
-                        title: "Weinig biljetten",
-                        text: "De ATM heeft niet genoeg biljetten om de transactie te vervullen.",
+                        title: global_languages[LANGUAGE].errorMessages.LOW_ATM_BILLS.title,
+                        text: global_languages[LANGUAGE].errorMessages.LOW_ATM_BILLS.text,
                         icon: "error"
                     });
                     break;
                 case "NOOB_TRANSACTION":
                     Swal.fire({
-                        title: "Transactie geschiedenis niet mogelijk",
-                        text: "De optie transactie geschiedenis is alleen mogelijk voor klanten van de Wild West Bank",
+                        title: global_languages[LANGUAGE].errorMessages.NOOB_TRANSACTION.title,
+                        text: global_languages[LANGUAGE].errorMessages.NOOB_TRANSACTION.text,
                         icon: "info"
                     });
                     break;
+                case "DAILY_LIMIT":
+                    Swal.fire({
+                        title: global_languages[LANGUAGE].errorMessages.DAILY_LIMIT.title,
+                        text: global_languages[LANGUAGE].errorMessages.DAILY_LIMIT.text,
+                        icon: "error"
+                    });
             }
         } else if(data.type == "SUCCESS") {
             switch(data.data) {
                 case "TRANSACTION_SUCCESS":
                     Swal.fire({
-                        title: "Dankuwel",
-                        text: "Bedankt voor het pinnen bij Wild West Bank!",
+                        title: global_languages[LANGUAGE].successMessages.TRANSACTION_SUCCESS.title,
+                        text: global_languages[LANGUAGE].successMessages.TRANSACTION_SUCCESS.text,
                         icon: "success"
                     })
                     break;
             }
         } else if(data.type == "USER_DATA" && CLIENT_STATE == "OPTIONS") {
-            document.querySelector("#welcome-message").innerHTML = "Welkom terug, " + data.data;
+            document.querySelector("#welcome-message").innerHTML = global_languages[LANGUAGE].welcomeBackMessage + data.data;
         
         } else if(data.type == "GET_INFO") {
             console.log("Just received my GET_INFO data!");
             document.querySelector("#gegevens-id").innerHTML = "ID: " + data.customer_id;
-            document.querySelector("#gegevens-naam").innerHTML = "Naam: " + data.name;
+            document.querySelector("#gegevens-naam").innerHTML = global_languages[LANGUAGE].userInfoRows.name + ": " + data.name;
             document.querySelector("#gegevens-iban").innerHTML = "IBAN: " + formatIBAN(data.iban);
-            document.querySelector("#gegevens-saldo").innerHTML = "Saldo: €" + data.balance;
+            document.querySelector("#gegevens-saldo").innerHTML = global_languages[LANGUAGE].userInfoRows.balance + ": €" + data.balance;
 
             let dateTime = new Date(data.creation_date);
             let formattedDateTime = new Intl.DateTimeFormat('en-GB', {
@@ -239,7 +253,7 @@ document.querySelector("#start").addEventListener("click", () => {
                 hour12: false,
             }).format(dateTime);
 
-            document.querySelector("#gegevens-datum").innerHTML = "Gemaakt op: " + formattedDateTime;
+            document.querySelector("#gegevens-datum").innerHTML = global_languages[LANGUAGE].userInfoRows.creationDate + " " + formattedDateTime;
         
         } else if(data.type == "PINCODE" && CLIENT_STATE == "PINCODE") {
             let pincodePlaceholder = document.querySelector("#pincode-placeholder");
@@ -311,15 +325,22 @@ document.querySelector("#start").addEventListener("click", () => {
             let transactionContainer = document.querySelector("#transaction-container");
             
             let transactionTitle = document.createElement("h2");
-            transactionTitle.innerHTML = "Transaction History";
+            transactionTitle.style.borderBottom = "solid 1px black";
+            transactionTitle.style.paddingBottom = "3px";
+            transactionTitle.style.width = "100%";
+            transactionTitle.style.marginBottom = 0;
+            transactionTitle.style.paddingBottom = "10px";
+
+            transactionTitle.innerHTML = global_languages[LANGUAGE].menuOptions.transactionHistory;
             transactionContainer.appendChild(transactionTitle);
             
+            let rowIndex = 0;
             data.transactions.forEach(row => {
                 let transactionDiv = document.createElement("div");
                 transactionDiv.className = "transaction-div";
 
                 let transactionID = document.createElement("p");
-                transactionID.innerText = `Transcation ID: #${row.Transaction_ID}`;
+                transactionID.innerHTML = `<b>${global_languages[LANGUAGE].transactionHistory.transactionID}:</b> #${row.Transaction_ID}`;
 
                 let dateTime = new Date(row.Date);
                 let formattedDateTime = new Intl.DateTimeFormat('en-GB', {
@@ -333,16 +354,23 @@ document.querySelector("#start").addEventListener("click", () => {
                 }).format(dateTime);
 
                 let transactionDate = document.createElement("p");
-                transactionDate.innerText = `Date: ${formattedDateTime}`;
+                transactionDate.innerHTML = `<b>${global_languages[LANGUAGE].transactionHistory.date}:</b> ${formattedDateTime}`;
 
                 let transactionAmount = document.createElement("p");
-                transactionAmount.innerText = `Amount: €${row.Transaction_amount}`;
+                transactionAmount.innerHTML = `<b>${global_languages[LANGUAGE].transactionHistory.amount}:</b> €${row.Transaction_amount}`;
 
                 transactionDiv.appendChild(transactionID);
                 transactionDiv.appendChild(transactionDate);
                 transactionDiv.appendChild(transactionAmount);
 
                 transactionContainer.appendChild(transactionDiv);
+
+                if(rowIndex % 2 == 0) {
+                    transactionID.style.backgroundColor = "#e3e5ff";
+                    transactionDiv.style.backgroundColor = "#e3e5ff";
+                }
+
+                rowIndex++;
             });
         }
 
@@ -451,6 +479,13 @@ document.querySelector("#start").addEventListener("click", () => {
             "amount": 100
         }));
     });
+
+    for(let flag of document.getElementsByClassName('flags')) {
+        flag.addEventListener('click', () => {
+            LANGUAGE = flag.getAttribute('value');
+            loadLanguage();
+        });
+    }
 });
 
 function activate_page(id) {
@@ -499,4 +534,42 @@ function formatIBAN(iban) {
     }
 
     return formatted_iban;
+}
+
+async function setLanguages() {
+    const options = {
+        method: "GET",
+        headers: {
+            'Content-Type': "application/json"
+        }
+    };
+
+    const response = await fetch('/languages/languages.json', options);
+    const json = await response.json();
+
+    global_languages = json;
+}
+
+async function loadLanguage() {
+    document.querySelector("#scan-card-text").innerHTML = global_languages[LANGUAGE].scanCardMessage;
+    document.querySelector("#passcode-text").innerHTML = global_languages[LANGUAGE].enterPasscodeMessage;
+
+    document.querySelector("#snelpinnen-btn").innerHTML = global_languages[LANGUAGE].menuOptions.quickPin;
+    document.querySelector("#geld-opnemen-btn").innerHTML = global_languages[LANGUAGE].menuOptions.withdraw;
+    document.querySelector("#info-btn").innerHTML = global_languages[LANGUAGE].menuOptions.getInfo;
+    document.querySelector("#transaction-btn").innerHTML = global_languages[LANGUAGE].menuOptions.transactionHistory;
+    document.querySelector("#uitloggen").innerHTML = global_languages[LANGUAGE].menuOptions.logout;
+
+    document.querySelector("#gebruiker-gegevens").innerHTML = global_languages[LANGUAGE].getInfoTitle;
+    
+    document.querySelector("#geld-invoeren-text").innerHTML = global_languages[LANGUAGE].withdrawMessage;
+    document.querySelector("#withdraw-option").innerHTML = global_languages[LANGUAGE].withdrawOption;
+    document.querySelector("#biljetkeuze").innerHTML = global_languages[LANGUAGE].billOption;
+    document.querySelector("#dispensing-money").innerHTML = global_languages[LANGUAGE].dispensingMoney;
+    
+    document.querySelector("#receipt-option-title").innerHTML = global_languages[LANGUAGE].receiptOption;
+    document.querySelector("#receipt-title").innerHTML = global_languages[LANGUAGE].receiptMessage;
+
+    document.querySelector("#receipt-option-ja").innerHTML = global_languages[LANGUAGE].receiptOptions.yes;
+    document.querySelector("#receipt-option-nee").innerHTML = global_languages[LANGUAGE].receiptOptions.no;
 }
