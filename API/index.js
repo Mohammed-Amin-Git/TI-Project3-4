@@ -2,7 +2,6 @@ import {
 	validateRequestAccountInfo,
 	getCustomerByIBANandUID,
 	getCustomerInfo,
-	updateAttemptsRemaining,
 	blockCardOfCustomer,
 	validateRequestWithdraw
 } from './modules/validationFunctions.js';
@@ -33,9 +32,12 @@ app.get("/api/noob/health", (req, res) => {
 let customer_attempts_remaining = {};
 
 app.post("/api/accountinfo", async (req, res) => {
-	const target = req.body.target;
+	const target = req.query.target;
 	const pincode = req.body.pincode;
-	const uid = req.body.uid;
+	let uid;
+	try {
+		uid = req.body.uid.toUpperCase();
+	} catch(e) {};
 
 	console.log([target, uid, pincode]);
 
@@ -52,7 +54,7 @@ app.post("/api/accountinfo", async (req, res) => {
 
 		// Check if an attempts session is created
 		if(!customer_attempts_remaining[uid]) {
-			customer_attempts_remaining[uid] = 4;
+			customer_attempts_remaining[uid] = 3;
 		}
 
 		// Checking if the card of the customer is blocked
@@ -75,7 +77,7 @@ app.post("/api/accountinfo", async (req, res) => {
 		}
 
 		// Return user data because authentication was successful
-		customer_attempts_remaining[uid] = 4;
+		customer_attempts_remaining[uid] = 3;
 		res.status(200).json({
 			"firstname": customerInfo.Firstname,
 			"lastname": customerInfo.Lastname,
@@ -88,10 +90,18 @@ app.post("/api/accountinfo", async (req, res) => {
 });
 
 app.post("/api/withdraw", async (req, res) => {
-	const target = req.body.target;
-	const uid = req.body.uid;
+	const target = req.query.target;
+	let uid;
 	const pincode = req.body.pincode;
 	const amount = req.body.amount;
+
+	try {
+		uid = req.body.uid.toUpperCase();
+	} catch(e) {};
+
+	console.log([target, uid, pincode]);
+
+	console.log(target, uid, pincode, amount);
 
 	try {
 		if(!validateRequestWithdraw(target, uid, pincode, amount)) {
@@ -106,7 +116,7 @@ app.post("/api/withdraw", async (req, res) => {
 
 		// Check if an attempts session is created
 		if(!customer_attempts_remaining[uid]) {
-			customer_attempts_remaining[uid] = 4;
+			customer_attempts_remaining[uid] = 3;
 		}
 
 		// Checking if the card of the customer is blocked
@@ -129,7 +139,7 @@ app.post("/api/withdraw", async (req, res) => {
 		}
 
 		// Return user data because authentication was successful
-		customer_attempts_remaining[uid] = 4;
+		customer_attempts_remaining[uid] = 3;
 
 		if(customerInfo.Balance >= amount) {
 			// TODO: Update customer balance
